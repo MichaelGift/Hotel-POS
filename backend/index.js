@@ -14,3 +14,7 @@ mongoose.connect(`${process.env.MONGODB_URI}`, )
     .catch((error) => {
         console.trace(error)
     });
+
+app.get('/', (req, res) => {
+    res.send({'message':'Hello World!'})
+});
