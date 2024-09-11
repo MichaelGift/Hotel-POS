@@ -1,10 +1,15 @@
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
+const ingredientRoute = require('./routes/ingredient.routes');
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use('/api/ingredients', ingredientRoute);
 
 
-mongoose.connect(`${process.env.MONGODB_URI}`, )
+mongoose.connect(`${process.env.MONGODB_URI}`,)
     .then(() => {
         console.log("Connected to database!")
         app.listen(3000, () => {
@@ -16,5 +21,5 @@ mongoose.connect(`${process.env.MONGODB_URI}`, )
     });
 
 app.get('/', (req, res) => {
-    res.send({'message':'Hello World!'})
+    res.send({'message': 'Hello World!'})
 });
