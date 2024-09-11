@@ -1,5 +1,4 @@
 const Dish = require('../models/dish.model');
-const ingredientController = require('../controllers/ingredient.controller')
 
 const addDish = async (req, res) => {
     try {
