@@ -6,6 +6,10 @@ const TableSchema = new mongoose.Schema(
             type: String,
             required: [true, "Please enter a table name"],
         },
+        reserved: {
+            type: String,
+            default: false
+        },
         seats: [
             {
                 seat_number: {
