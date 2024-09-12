@@ -2,13 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const ingredientRoute = require('./routes/ingredient.routes');
-const dishRoute = require('./routes/dish.routes')
+const dishRoute = require('./routes/dish.routes');
+const orderRoute = require('./routes/order.routes')
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use('/api/ingredients', ingredientRoute);
 app.use('/api/dishes', dishRoute)
+app.use('/api/orders', orderRoute)
 
 
 mongoose.connect(`${process.env.MONGODB_URI}`,)
