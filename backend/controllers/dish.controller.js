@@ -57,11 +57,9 @@ const serveDish = async (req, res) => {
         const dish = await Dish.findById(req.params.id).populate('ingredients.ingredient');
 
         if (!dish) return res.status(404).json({message: `Dish not found`});
-        console.log(dish);
 
         for (let item of dish.ingredients) {
             const ingredient = item.ingredient;
-            console.log(`Object ${ingredient}, reference: ${item.ingredient}`); // Getting undefined here
             const requiredQuantity = item.quantityRequired;
 
             if (ingredient.quantity < requiredQuantity) {
