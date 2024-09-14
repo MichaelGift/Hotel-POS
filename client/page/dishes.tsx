@@ -1,7 +1,7 @@
 import { BASE_URL, Ingredient } from "./Inventory.tsx";
 import { useEffect, useState } from "react";
 
-interface Dish {
+export interface Dish {
   _id: string;
   name: string;
   price: number;
