@@ -1,9 +1,9 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
 
-const BASE_URL = "http://localhost:3000/api";
+export const BASE_URL = "http://localhost:3000/api";
 
-interface Ingredient {
+export interface Ingredient {
     _id: string;
     name: string;
     quantity: number;
@@ -207,4 +207,4 @@ const Inventory = () => {
     );
 };
 
-export default Inventory;
+export default Inventory
