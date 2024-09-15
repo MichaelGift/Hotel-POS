@@ -100,17 +100,31 @@ const Order = () => {
             const dishToAdd = availableDishes.find((dish) => dish._id === dishId)
 
             if (dishToAdd) {
-                setNewOrder({
-                    ...newOrder,
-                    dishes: [
-                        ...newOrder.dishes,
-                        {
-                            dish: dishToAdd,
-                            quantityRequired: requiredQuantity
+                if (targetOrder) {
+                    setTargetOrder({
+                            ...targetOrder,
+                            dishes: [
+                                ...targetOrder.dishes,
+                                {
+                                    dish: dishToAdd,
+                                    quantityRequired: requiredQuantity,
+                                    orderComplete: false
+                                }
+                            ]
                         }
-                    ]
-                });
-
+                    );
+                } else {
+                    setNewOrder({
+                        ...newOrder,
+                        dishes: [
+                            ...newOrder.dishes,
+                            {
+                                dish: dishToAdd,
+                                quantityRequired: requiredQuantity
+                            }
+                        ]
+                    });
+                }
                 setDishId("");
                 setRequiredQuantity(1);
             }
