@@ -15,7 +15,7 @@ interface Order {
 
 const Order = () => {
     const [order, setOrders] = useState<Order[]>([])
-    const [orderTarget, setOrderTarget] = useState<Order>({
+    const [targetOrder, setTargetOrder] = useState<Order | null>({
         _id: '',
         bill: 0,
         orderComplete: false,
@@ -74,11 +74,15 @@ const Order = () => {
         }
     }
 
-    const updateOrder = async (id: string) => {
+    const updateOrder = async () => {
+        if (!targetOrder) return
         try {
-            const response = await fetch(`${BASE_URL}/orders/${id}`, {
+            const response = await fetch(`${BASE_URL}/orders/${targetOrder._id}`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 method: "PUT",
-                body: JSON.stringify(orderTarget)
+                body: JSON.stringify(targetOrder)
             })
 
             if (response.ok) {
@@ -93,7 +97,7 @@ const Order = () => {
         }
     }
 
-    const loadOrderToUpdate = (order: Order) => setOrderTarget(order)
+    const loadOrderToUpdate = (order: Order) => setTargetOrder(order)
 
     const addDishToOrder = () => {
         if (dishId && requiredQuantity > 0) {
@@ -157,6 +161,21 @@ const Order = () => {
             console.log(error.stack);
         }
     }
+
+    const updateDishQuantity = (index: number, newQuantity: number) => {
+        if(!targetOrder) return
+        const updatedDishes = targetOrder.dishes.map((dish, i) =>
+            i === index ? {...dish, quantityRequired: newQuantity} : dish
+        );
+        setTargetOrder({...targetOrder, dishes: updatedDishes});
+    };
+
+    const deleteDishFromOrder = (index: number) => {
+        if(!targetOrder) return
+        const updatedDishes = targetOrder.dishes.filter((_, i) => i !== index);
+        setTargetOrder({...targetOrder, dishes: updatedDishes});
+    };
+
     return (
         <>
             <h2>Orders</h2>
@@ -212,6 +231,48 @@ const Order = () => {
                     Create Order
                 </button>
             </form>
+
+            {targetOrder && (
+                <>
+                    <h2>Update Order</h2>
+                    <form onSubmit={updateOrder}>
+                        <select value={dishId} onChange={(e) => setDishId(e.target.value)}>
+                            <option value="">Select Dish</option>
+                            {availableDishes.map((dish) => (
+                                <option key={dish._id} value={dish._id}>
+                                    {dish.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <input
+                            type="number"
+                            value={requiredQuantity}
+                            onChange={(e) => setRequiredQuantity(Number(e.target.value))}
+                            placeholder="Quantity Required"
+                        />
+                        <button type="button" onClick={addDishToOrder}>
+                            Add Dish
+                        </button>
+                        <h3>{targetOrder._id}</h3>
+                        <ul>
+                            {targetOrder.dishes.map((dish, index) => (
+                                <li key={dish.dish._id}>
+                                    Name: {dish.dish.name}, Quantity:
+                                    <input
+                                        value={dish.quantityRequired}
+                                        onChange={(e) => updateDishQuantity(index, Number(e.target.value))}
+                                    />
+                                    <button type="button" onClick={() => deleteDishFromOrder(index)}>Remove Dish
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <button type="button" onClick={updateOrder}>Update Order</button>
+                    </form>
+                </>
+            )}
 
         </>
     )
