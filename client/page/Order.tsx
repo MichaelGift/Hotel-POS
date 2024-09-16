@@ -2,7 +2,7 @@ import {Dish} from "./dishes.tsx";
 import {useEffect, useState} from "react";
 import {BASE_URL} from "./Inventory.tsx";
 
-interface Order {
+export interface Order {
     _id: string,
     bill: number,
     orderComplete: boolean,
