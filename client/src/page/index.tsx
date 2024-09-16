@@ -1,13 +1,15 @@
-import Home from './Home';
-import Inventory from "./Inventory";
+import Home from './Home.tsx';
+import Inventory from "./Inventory.tsx";
 import Dishes from "./dishes.tsx";
 import Order from "./Order.tsx";
 import Table from "./Table.tsx";
+import PoS from "./POS.tsx"
 
 export {
     Home,
     Inventory,
     Dishes,
     Order,
-    Table
+    Table,
+    PoS
 };

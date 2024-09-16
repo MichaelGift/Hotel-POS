@@ -1,5 +1,5 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Dishes, Home, Inventory, Order, Table, PoS} from '../page';
+import {Dishes, Home, Inventory, Order, Table, PoS} from './page';
 
 
 const BASE_URL = "http://localhost:3000/api";
