@@ -1,5 +1,5 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Dishes, Home, Inventory, Order, PoS, Table} from './page';
+import {Dishes, Home, Inventory, Menu, Order, PoS, Table} from './page';
 
 
 const BASE_URL = "http://localhost:3000/api";
@@ -14,7 +14,8 @@ const App = () => (
             <Route path='/orders' element={<Order/>}/>
             <Route path='/tables' element={<Table/>}/>
             <Route path='/pos' element={<PoS/>}>
-                <Route path='menu'/>
+                <Route index element={<Menu/>}/>
+                <Route path='menu' element={<Menu/>}/>
                 <Route path='reservations'/>
                 <Route path='tables'/>
                 <Route path='ingredients'/>
