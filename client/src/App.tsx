@@ -1,10 +1,6 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {Dishes, Home, Inventory, Menu, Order, PoS, Table} from './page';
-
-
-const BASE_URL = "http://localhost:3000/api";
-
-
+import InventoryV2 from "./page/Inventory.v2.tsx";
 const App = () => (
     <BrowserRouter>
         <Routes>
@@ -18,7 +14,7 @@ const App = () => (
                 <Route path='menu' element={<Menu/>}/>
                 <Route path='reservations'/>
                 <Route path='tables'/>
-                <Route path='ingredients'/>
+                <Route path='inventory' element={<InventoryV2/>}/>
                 <Route path='dishes'/>
             </Route>
         </Routes>

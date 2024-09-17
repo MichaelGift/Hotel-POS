@@ -5,6 +5,7 @@ import Order from "./Order.tsx";
 import Table from "./Table.tsx";
 import PoS from "./POS.tsx"
 import Menu from "./Menu.tsx"
+import InventoryV2 from "./Inventory.v2.tsx";
 
 export {
     Home,
@@ -13,5 +14,6 @@ export {
     Order,
     Table,
     PoS,
-    Menu
+    Menu,
+    InventoryV2
 };
