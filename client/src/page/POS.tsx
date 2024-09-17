@@ -13,10 +13,10 @@ const PoS = () => {
                         <SideNavButton text="Menu" route='menu'/>
                         <SideNavButton text="Reservations" route='reservations'/>
                         <SideNavButton text="Tables" route='tables'/>
-                        <SideNavButton text="Ingredients" route='ingredients'/>
                         <SideNavButton text="Dishes" route='dishes'/>
+                        <SideNavButton text="Inventory" route='inventory'/>
                     </div>
-                    <main className="col-10">
+                    <main className="col-10" style={{height: '100vh'}}>
                         <Outlet/>
                     </main>
 
