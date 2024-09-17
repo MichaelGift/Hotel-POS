@@ -13,11 +13,7 @@ const getOrders = async (req, res) => {
     try {
         const orders = await Order.find({}).populate(
             {
-                path: 'dishes.dish',
-                populate: {
-                    path: 'ingredients.ingredient',
-                    model: 'Ingredient'
-                }
+                path: 'dishes.dish'
             });
         res.status(200).json(orders);
     } catch (error) {
@@ -48,11 +44,7 @@ const deleteOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
     try {
         const order = await Order.findByIdAndUpdate(req.params.id, req.body).populate({
-            path: 'dishes.dish',
-            populate: {
-                path: 'ingredients.ingredient',
-                model: 'Ingredient'
-            }
+            path: 'dishes.dish'
         });
         if (!order) return res.status(404).json({message: `Order id ${req.params.id} not found`})
         const updatedOrder = await Order.findById(req.params.id).populate('dishes.dish');
