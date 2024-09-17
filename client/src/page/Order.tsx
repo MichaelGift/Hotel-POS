@@ -135,7 +135,7 @@ const Order = () => {
         }
     };
 
-    const addNewDish = async () => {
+    const addNewOrder = async () => {
         try {
             const response = await fetch(`${BASE_URL}/orders`, {
                     method: "POST",
@@ -199,7 +199,7 @@ const Order = () => {
             </ul>
 
             <h2>Compose Order</h2>
-            <form onSubmit={addNewDish}>
+            <form onSubmit={addNewOrder}>
                 <select value={dishId} onChange={(e) => setDishId(e.target.value)}>
                     <option value="">Select Dish</option>
                     {availableDishes.map((dish) => (
@@ -227,7 +227,7 @@ const Order = () => {
                     ))}
                 </ul>
 
-                <button type="button" onClick={addNewDish}>
+                <button type="button" onClick={addNewOrder}>
                     Create Order
                 </button>
             </form>
