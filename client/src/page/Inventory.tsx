@@ -159,7 +159,7 @@ const Inventory = () => {
                                    value={newIngredient.quantity} onChange={handleChange}/>
                         </div>
 
-                        <button className="btn btn-success rounded" onClick={createNewIngredient} type="button">Add to
+                        <button className="btn btn-success rounded w-100" onClick={createNewIngredient} type="button">Add to
                             Inventory
                         </button>
                     </form>
