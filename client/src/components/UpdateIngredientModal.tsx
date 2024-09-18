@@ -2,7 +2,7 @@ const UpdateIngredientModal = ({name, price, quantity, onClose, onDelete, onUpda
     <>
         <div className="modal fade show" style={{display: "block"}} tabIndex="-1" role="dialog">
             <div className="model fade show modal-dialog modal-dialog-centered rounded" role="document">
-                <div className="modal-content bg-dark">
+                <div className="modal-content" style={{backgroundColor: '#2d2d2d', borderRadius: '4%'}}>
                     <div className="modal-header">
                         <h5 className="modal-title">{name}</h5>
                         <button type="button" className="close btn-secondary btn text-light rounded-circle"
