@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {BASE_URL, Ingredient} from "./Inventory.tsx";
 import {IngredientCard} from "../components";
+import UpdateIngredientModal from "../components/UpdateIngredientModal.tsx";
 
 const InventoryV2 = () => {
     const [ingredients, setIngredient] = useState<Ingredient[]>([])
@@ -8,7 +9,20 @@ const InventoryV2 = () => {
         name: "",
         price: 0,
         quantity: 0,
-    })
+    });
+    const [targetIngredient, setTargetIngredient] = useState<Ingredient>(null)
+
+    const [showModal, setShowModal] = useState(false);
+
+    const handleClose = () => {
+        setTargetIngredient(null)
+        setShowModal(false);
+    }
+    const handleShow = (ingredient) => {
+        setTargetIngredient(ingredient)
+        setShowModal(true);
+    }
+
 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -57,13 +71,67 @@ const InventoryV2 = () => {
             console.log(error.stack);
         }
     }
+
+    const handleUpdate = (e) => {
+        setTargetIngredient({
+            ...targetIngredient, [e.target.name]: e.target.value
+        })
+    }
+
+    const updateIngredient = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/ingredients/${targetIngredient._id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(targetIngredient)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Success')
+            } else {
+                console.log(data)
+            }
+        } catch (error) {
+            console.log(error.stack)
+        }
+    }
+    const deleteIngredient = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/ingredients/${targetIngredient._id}`, {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Success');
+            } else {
+                console.log(data);
+            }
+        } catch (error) {
+            console.log(error.stack);
+        }
+    }
     return (
         <>
+            {showModal && (
+                <UpdateIngredientModal {...targetIngredient} onClose={handleClose} handleUpdate={handleUpdate}
+                                       onUpdate={updateIngredient} onDelete={deleteIngredient}/>
+            )}
+
+            {/* Overlay when modal is active */}
+            {showModal && <div className="modal-backdrop fade show"></div>}
+
             <div className='row'>
                 <div className='col-8 d-flex flex-column'>
                     <div className='row d-flex'>
                         {ingredients.map((ingr) => (
-                            <IngredientCard {...ingr} key={ingr._id}/>
+                            <IngredientCard {...ingr} key={ingr._id} onClick={() => handleShow(ingr)}/>
                         ))}
                     </div>
                 </div>
@@ -91,7 +159,9 @@ const InventoryV2 = () => {
                                    value={newIngredient.quantity} onChange={handleChange}/>
                         </div>
 
-                        <button className="btn btn-success rounded" onClick={createNewIngredient} type="button">Add to Inventory</button>
+                        <button className="btn btn-success rounded" onClick={createNewIngredient} type="button">Add to
+                            Inventory
+                        </button>
                     </form>
                 </div>
             </div>
