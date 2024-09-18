@@ -1,5 +1,6 @@
-import { BASE_URL, Ingredient } from "./Inventory.tsx";
 import { useEffect, useState } from "react";
+import {BASE_URL} from "../App.tsx";
+import {Ingredient} from "./Inventory.tsx";
 
 export interface Dish {
   _id: string;

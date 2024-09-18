@@ -1,11 +1,11 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Dishes, Home, Inventory, Menu, Order, PoS, Table} from './page';
-import InventoryV2 from "./page/Inventory.v2.tsx";
+import {Dishes, Home, Menu, Order, PoS, Table} from './page';
+import Inventory from "./page/Inventory.tsx";
+
 const App = () => (
     <BrowserRouter>
         <Routes>
             <Route path='/' element={<Home/>}/>
-            <Route path='/inventory' element={<Inventory/>}/>
             <Route path='/dishes' element={<Dishes/>}/>
             <Route path='/orders' element={<Order/>}/>
             <Route path='/tables' element={<Table/>}/>
@@ -14,7 +14,7 @@ const App = () => (
                 <Route path='menu' element={<Menu/>}/>
                 <Route path='reservations'/>
                 <Route path='tables'/>
-                <Route path='inventory' element={<InventoryV2/>}/>
+                <Route path='inventory' element={<Inventory/>}/>
                 <Route path='dishes'/>
             </Route>
         </Routes>
@@ -22,3 +22,4 @@ const App = () => (
 )
 
 export default App
+export const BASE_URL = "http://localhost:3000/api";

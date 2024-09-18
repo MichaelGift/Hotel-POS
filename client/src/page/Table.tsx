@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
-import {BASE_URL} from "./Inventory.tsx";
+
+import {BASE_URL} from "../App.tsx";
 
 
 export interface Table {
