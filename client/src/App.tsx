@@ -1,5 +1,5 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Dishes, Home, Menu, Order, PoS, Table} from './page';
+import {Dishes, DishesV2, Home, Menu, Order, PoS, Table} from './page';
 import Inventory from "./page/Inventory.tsx";
 
 const App = () => (
@@ -15,7 +15,7 @@ const App = () => (
                 <Route path='reservations'/>
                 <Route path='tables'/>
                 <Route path='inventory' element={<Inventory/>}/>
-                <Route path='dishes'/>
+                <Route path='dishes' element={<DishesV2/>}/>
             </Route>
         </Routes>
     </BrowserRouter>
