@@ -206,7 +206,7 @@ const Table = () => {
                                     {newTable.seats.map((seat) => (
                                         <div className={'col-12 p-1'} key={seat.seat_number}>
                                             <div className={'input-group'}>
-                                                <input type={'number'} className={'form-control'}
+                                                <input type={'number'} className={'form-control bg-dark border-0 text-light'}
                                                        value={seat.seat_number} disabled/>
                                                 <button className={'btn btn-danger'} type={'button'}
                                                         onClick={() => removeSeatFromTable(seat.seat_number)}>Remove
