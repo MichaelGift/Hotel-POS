@@ -20,6 +20,10 @@ const Order = () => {
     const [orders, setOrders] = useState<Order[]>([])
     const [targetOrder, setTargetOrder] = useState<Order>(null)
 
+    const completedDishes = targetOrder?.dishes.filter(item => item.orderComplete)
+    const pendingDishes = targetOrder?.dishes.filter(item => !item.orderComplete) || []
+
+
     useEffect(() => {
         const fetchOrder = async () => {
             try {
@@ -32,6 +36,20 @@ const Order = () => {
         }
         fetchOrder();
     }, []);
+
+    const checkCompletion = () => {
+        if (pendingDishes.length === 0 && targetOrder && !targetOrder.orderComplete) {
+            setTargetOrder({
+                ...targetOrder,
+                orderComplete: true
+            })
+        }
+    }
+
+    useEffect(() => {
+        checkCompletion();
+    }, [pendingDishes])
+
 
     const deleteOrder = async (id: string) => {
         try {
@@ -125,27 +143,68 @@ const Order = () => {
                         <>
                             <div>
                                 <form>
-                                    <div className={'mb-3'}>
-                                        <label className={'form-label'}>Pending</label>
-                                        <div className={'row overflow-auto m-1'}
-                                             style={{maxHeight: '30vh', borderRadius: '4%'}}>
-                                            {targetOrder?.dishes.map((item, index) => (
-                                                <div className={'col-12 p-1'} key={index}>
-                                                    <div className={'input-group'}>
-                                                        <input type={'text'}
-                                                               className={'form-control bg-dark border-0 text-light'}
-                                                               value={item.dish.name} disabled/>
-                                                        <input type={'number'}
-                                                               className={'form-control bg-dark border-0 text-light'}
-                                                               value={item.quantityRequired} disabled/>
-                                                        <button className={'btn btn-primary'} type={'button'}>Complete
-                                                        </button>
-                                                    </div>
-                                                </div>))}
-                                        </div>
+                                    <div className={'mb-3 overflow-auto'}
+                                         style={{maxHeight: '30vh', borderRadius: '4%'}}>
+                                        <label className={'form-label m-0'}>Pending</label>
+
+                                        {pendingDishes.map((item, index) => (
+                                            <div className={'col-12 p-1'} key={index}>
+                                                <div className={'input-group'}>
+                                                    <input type={'text'}
+                                                           className={'form-control bg-dark border-0 text-light'}
+                                                           value={item.dish.name} disabled/>
+                                                    <input type={'number'}
+                                                           className={'form-control bg-dark border-0 text-light'}
+                                                           value={item.quantityRequired} disabled/>
+                                                    <button className={'btn btn-primary'}
+                                                            type={'button'}
+                                                            onClick={() => {
+                                                                setTargetOrder({
+                                                                    ...targetOrder,
+                                                                    dishes: targetOrder.dishes.map(dish => {
+                                                                        if (dish.dish._id === item.dish._id) {
+                                                                            dish.orderComplete = !dish.orderComplete
+                                                                        }
+                                                                        return dish
+                                                                    })
+                                                                })
+                                                            }}>
+                                                        Complete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className={'mb-3'}>
-                                        <label className={'form-label'}>Completed</label>
+                                    <div className={'mb-3 overflow-auto'}
+                                         style={{maxHeight: '30vh', borderRadius: '4%'}}>
+                                        <label className={'form-label m-0'}>Completed</label>
+                                        {completedDishes.map((item, index) => (
+                                            <div className={'col-12 p-1'} key={index}>
+                                                <div className={'input-group'}>
+                                                    <input type={'text'}
+                                                           className={'form-control bg-dark border-0 text-light'}
+                                                           value={item.dish.name} disabled/>
+                                                    <input type={'number'}
+                                                           className={'form-control bg-dark border-0 text-light'}
+                                                           value={item.quantityRequired} disabled/>
+                                                    <button className={'btn btn-danger'}
+                                                            type={'button'}
+                                                            onClick={() => {
+                                                                setTargetOrder({
+                                                                    ...targetOrder,
+                                                                    dishes: targetOrder.dishes.map(dish => {
+                                                                        if (dish.dish._id === item.dish._id) {
+                                                                            dish.orderComplete = !dish.orderComplete
+                                                                        }
+                                                                        return dish
+                                                                    })
+                                                                })
+                                                            }}>
+                                                        Incomplete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
 
                                     <button className={'btn btn-success rounded w-100 mt-auto'} type={'button'}
