@@ -11,7 +11,7 @@ const addOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
     try {
-        const orders = await Order.find({}).populate('dishes.dish');
+        const orders = await Order.find({}).populate('dishes.dish').populate('table');
         res.status(200).json(orders);
     } catch (error) {
         res.status(500).json({message: error.message});
