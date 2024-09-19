@@ -149,25 +149,25 @@ const Menu = () => {
                 <div className="col-8 d-flex flex-column" style={{height: '100vh'}}>
                     <ul className="nav nav-pills mt-2 border-0 m-0">
                         <li className={'nav-item'}>
-                            <a className={`nav-link ${selectedCategory === 'Breakfast' ? 'active' : ''} text-light`}
+                            <a className={`nav-link btn ${selectedCategory === 'Breakfast' ? 'active' : ''} text-light`}
                                onClick={() => handleCategoryChange('Breakfast')}>
                                 Breakfast
                             </a>
                         </li>
                         <li className={'nav-item'}>
-                            <a className={`nav-link ${selectedCategory === 'Lunch' ? 'active' : ''} text-light`}
+                            <a className={`nav-link btn ${selectedCategory === 'Lunch' ? 'active' : ''} text-light`}
                                onClick={() => handleCategoryChange('Lunch')}>
                                 Lunch
                             </a>
                         </li>
                         <li className={'nav-item'}>
-                            <a className={`nav-link ${selectedCategory === 'Dinner' ? 'active' : ''} text-light`}
+                            <a className={`nav-link btn ${selectedCategory === 'Dinner' ? 'active' : ''} text-light`}
                                onClick={() => handleCategoryChange('Dinner')}>
                                 Dinner
                             </a>
                         </li>
                         <li className={'nav-item'}>
-                            <a className={`nav-link ${selectedCategory === 'Drinks' ? 'active' : ''} text-light`}
+                            <a className={`nav-link btn ${selectedCategory === 'Drinks' ? 'active' : ''} text-light`}
                                onClick={() => handleCategoryChange('Drinks')}>
                                 Drinks
                             </a>

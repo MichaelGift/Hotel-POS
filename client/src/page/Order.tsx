@@ -119,13 +119,13 @@ const Order = () => {
                 <div className={'col-8 d-flex flex-column'}>
                     <ul className={'nav nav-pills mt-2 border-0 m-0'}>
                         <li className={'nav-item'}>
-                            <a className={`nav-link ${!selectedCategory ? 'active' : ''} text-light`}
+                            <a className={`nav-link btn ${!selectedCategory ? 'active' : ''} text-light`}
                                onClick={() => handleCategoryChange(false)}>
                                 Pending
                             </a>
                         </li>
                         <li className={'nav-item'}>
-                            <a className={`nav-link ${selectedCategory ? 'active' : ''} text-light`}
+                            <a className={`nav-link btn ${selectedCategory ? 'active' : ''} text-light`}
                                onClick={() => handleCategoryChange(true)}>
                                 Completed
                             </a>
