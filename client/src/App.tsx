@@ -10,6 +10,7 @@ const App = () => (
             <Route path='/tables' element={<Table/>}/>
             <Route path='/pos' element={<PoS/>}>
                 <Route index element={<Menu/>}/>
+                <Route path='order' element={<Order/>}/>
                 <Route path='menu' element={<Menu/>}/>
                 <Route path='reservations' element={<Reservation/>}/>
                 <Route path='tables' element={<Table/>}/>
