@@ -83,6 +83,21 @@ const Menu = () => {
         }
     }
 
+
+    const handleUpdate = (e, index) => {
+        const {name, value} = e.target;
+
+        setNewOrder(prevOrder => {
+            const updatedDishes = [...prevOrder.dishes];
+            console.log(updatedDishes);
+            updatedDishes[index] = {
+                ...updatedDishes[index],
+                [name]: value
+            };
+            return {...prevOrder, dishes: updatedDishes};
+        });
+    };
+
     return (
         <>
             <div className='row'>
@@ -100,7 +115,10 @@ const Menu = () => {
                     <div className="container">
                         <div className="row overflow-auto" style={{maxHeight: '65vh', borderRadius: '4%'}}>
                             {newOrder.dishes.map((item, index) => (
-                                <OrderItem item={item} onClick={() => removeDishFromOrder(index)} key={item._id}/>
+                                <OrderItem item={item}
+                                           onClick={() => removeDishFromOrder(index)}
+                                           key={item._id}
+                                           handleUpdate={(e) => handleUpdate(e, index)}/>
                             ))}
                         </div>
                     </div>
