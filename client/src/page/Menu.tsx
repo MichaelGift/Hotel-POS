@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Dish} from "./dishes.tsx";
 import {MenuDish, OrderItem} from "../components";
 import {BASE_URL} from "../App.tsx";
+import Table from "./Table.tsx";
 
 const Menu = () => {
     const [menu, setMenu] = useState<Dish[]>([])
@@ -11,6 +12,9 @@ const Menu = () => {
         dishes: []
     })
     const [totalPrice, setTotalPrice] = useState(0);
+
+    const [tables, setTables] = useState<Table[]>([]);
+    const [tableId, setTableId] = useState("");
 
     const calculateTotalPrice = () => {
         const total = newOrder.dishes.reduce((sum, item) => {
@@ -43,39 +47,52 @@ const Menu = () => {
             }
         }
 
+        const fetchTables = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/tables`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    setTables(data);
+                } else {
+                    console.log(data);
+                }
+            } catch (error) {
+                console.log(error.stack);
+            }
+        }
+
         fetchMenu();
+        fetchTables();
     }, [])
 
     const addDishToOrder = (dish) => {
-    setNewOrder((prevOrder) => {
-        // Check if the dish already exists in the order
-        const dishExists = prevOrder.dishes.find(item => item.dish._id === dish._id);
+        setNewOrder((prevOrder) => {
+            const dishExists = prevOrder.dishes.find(item => item.dish._id === dish._id);
 
-        if (dishExists) {
-            // If the dish exists, map through and increment its quantity
-            return {
-                ...prevOrder,
-                dishes: prevOrder.dishes.map(item =>
-                    item.dish._id === dish._id
-                    ? {...item, quantityRequired: item.quantityRequired + 1}
-                    : item
-                )
-            };
-        } else {
-            // If the dish doesn't exist, add it as a new dish
-            return {
-                ...prevOrder,
-                dishes: [
-                    ...prevOrder.dishes,
-                    {
-                        dish: dish,
-                        quantityRequired: 1
-                    }
-                ]
-            };
-        }
-    });
-};
+            if (dishExists) {
+                return {
+                    ...prevOrder,
+                    dishes: prevOrder.dishes.map(item =>
+                        item.dish._id === dish._id
+                            ? {...item, quantityRequired: item.quantityRequired + 1}
+                            : item
+                    )
+                };
+            } else {
+                return {
+                    ...prevOrder,
+                    dishes: [
+                        ...prevOrder.dishes,
+                        {
+                            dish: dish,
+                            quantityRequired: 1
+                        }
+                    ]
+                };
+            }
+        });
+    };
 
     const removeDishFromOrder = (index: number) => {
         const updatedDishes = newOrder.dishes.filter((_, i) => i !== index);
@@ -94,6 +111,7 @@ const Menu = () => {
 
             if (response.ok) {
                 setNewOrder({bill: 0, orderComplete: false, dishes: []});
+                setTableId("");
             } else {
                 console.log("Something went wrong");
             }
@@ -129,16 +147,39 @@ const Menu = () => {
                 </div>
                 <div className="col-4 d-flex flex-column shadow-sm rounded w-auto" style={{height: '100vh'}}>
                     <div className="mb-2 mt-2">
-                        <h5>Table 4</h5>
+                        <h5>New Order</h5>
                     </div>
                     <div className="container">
-                        <div className="row overflow-auto" style={{maxHeight: '65vh', borderRadius: '4%'}}>
-                            {newOrder.dishes.map((item, index) => (
-                                <OrderItem item={item}
-                                           onClick={() => removeDishFromOrder(index)}
-                                           key={item._id}
-                                           handleUpdate={(e) => handleUpdate(e, index)}/>
-                            ))}
+                        <div className={'mb-2'}>
+                            <div className={'input-group'}>
+                                <label className="text-secondary">Table</label>
+                                <select
+                                    className="form-select bg-dark border-0 text-light form-control w-100 rounded"
+                                    value={tableId}
+                                    onChange={(e) => {
+                                        setNewOrder({...newOrder, table: e.target.value});
+                                        setTableId(e.target.value)
+                                    }}>
+                                    <option value={""}>Select Table</option>
+                                    {tables.map((table) => (
+                                        <option key={table._id} value={table._id}>{table.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className={'input-group'}>
+                            <div className="mb-2">
+                                <h6 className="text-secondary">Order</h6>
+                            </div>
+                            <div className="row overflow-auto" style={{maxHeight: '65vh', borderRadius: '4%'}}>
+                                {newOrder.dishes.map((item, index) => (
+                                    <OrderItem item={item}
+                                               onClick={() => removeDishFromOrder(index)}
+                                               key={item._id}
+                                               handleUpdate={(e) => handleUpdate(e, index)}/>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
