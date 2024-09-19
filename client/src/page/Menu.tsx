@@ -15,6 +15,12 @@ const Menu = () => {
 
     const [tables, setTables] = useState<Table[]>([]);
     const [tableId, setTableId] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("Breakfast");
+    const filteredMenu = menu.filter(dish => dish.category === selectedCategory);
+
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category)
+    }
 
     const calculateTotalPrice = () => {
         const total = newOrder.dishes.reduce((sum, item) => {
@@ -110,9 +116,11 @@ const Menu = () => {
             });
 
             if (response.ok) {
+                alert("Order placed successfully");
                 setNewOrder({bill: 0, orderComplete: false, dishes: []});
                 setTableId("");
             } else {
+                alert("Something went wrong");
                 console.log("Something went wrong");
             }
         } catch (error) {
@@ -139,8 +147,35 @@ const Menu = () => {
         <>
             <div className='row'>
                 <div className="col-8 d-flex flex-column" style={{height: '100vh'}}>
+                    <ul className="nav nav-pills mt-2 border-0 m-0">
+                        <li className={'nav-item'}>
+                            <a className={`nav-link ${selectedCategory === 'Breakfast' ? 'active' : ''} text-light`}
+                               onClick={() => handleCategoryChange('Breakfast')}>
+                                Breakfast
+                            </a>
+                        </li>
+                        <li className={'nav-item'}>
+                            <a className={`nav-link ${selectedCategory === 'Lunch' ? 'active' : ''} text-light`}
+                               onClick={() => handleCategoryChange('Lunch')}>
+                                Lunch
+                            </a>
+                        </li>
+                        <li className={'nav-item'}>
+                            <a className={`nav-link ${selectedCategory === 'Dinner' ? 'active' : ''} text-light`}
+                               onClick={() => handleCategoryChange('Dinner')}>
+                                Dinner
+                            </a>
+                        </li>
+                        <li className={'nav-item'}>
+                            <a className={`nav-link ${selectedCategory === 'Drinks' ? 'active' : ''} text-light`}
+                               onClick={() => handleCategoryChange('Drinks')}>
+                                Drinks
+                            </a>
+                        </li>
+                    </ul>
+
                     <div className="row d-flex">
-                        {menu.map((dish) => (
+                        {filteredMenu.map((dish) => (
                             <MenuDish dish={dish} onClick={() => addDishToOrder(dish)} key={dish._id}/>
                         ))}
                     </div>
@@ -189,20 +224,20 @@ const Menu = () => {
                             <h6 className="text-secondary">Total</h6>
                             <h6>Ksh {totalPrice}</h6>
                         </div>
-                        <div className="mt-2">
-                            <h6 className="text-secondary">Payment Method</h6>
-                        </div>
-                        <div className="mt-2 row d-flex justify-content-around">
-                            <button className="btn text-light p-2 m-1 flex-fill rounded"
-                                    style={{backgroundColor: '#2d2d2d'}}>Cash
-                            </button>
-                            <button className="btn text-light p-2 m-1 flex-fill rounded"
-                                    style={{backgroundColor: '#2d2d2d'}}>Mobile
-                            </button>
-                            <button className="btn text-light p-2 m-1 flex-fill rounded"
-                                    style={{backgroundColor: '#2d2d2d'}}>Card
-                            </button>
-                        </div>
+                        {/*<div className="mt-2">*/}
+                        {/*    <h6 className="text-secondary">Payment Method</h6>*/}
+                        {/*</div>*/}
+                        {/*<div className="mt-2 row d-flex justify-content-around">*/}
+                        {/*    <button className="btn text-light p-2 m-1 flex-fill rounded"*/}
+                        {/*            style={{backgroundColor: '#2d2d2d'}}>Cash*/}
+                        {/*    </button>*/}
+                        {/*    <button className="btn text-light p-2 m-1 flex-fill rounded"*/}
+                        {/*            style={{backgroundColor: '#2d2d2d'}}>Mobile*/}
+                        {/*    </button>*/}
+                        {/*    <button className="btn text-light p-2 m-1 flex-fill rounded"*/}
+                        {/*            style={{backgroundColor: '#2d2d2d'}}>Card*/}
+                        {/*    </button>*/}
+                        {/*</div>*/}
 
                         <div className="mt-2 mb-3">
                             <button className="btn btn-success text-light p-2 m-1 w-100 rounded"
