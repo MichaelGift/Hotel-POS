@@ -19,15 +19,15 @@ const UpdateTableModal = ({name, seats, onClose, onDelete, onUpdate, handleUpdat
                             </div>
 
                             <div className={'mb-3'}>
-                                <label className={'form-label'}>Seats</label>
+                                <label className={'form-label m-0'}>Seats</label>
                                 <div className={'row overflow-auto m-1'}
                                      style={{maxHeight: '50vh', borderRadius: '4%'}}>
                                     {seats.map((seat) => (
                                         <div key={seat.seat_number}
-                                             className={'w-100 d-flex justify-content-between align-items-center p-2'}
+                                             className={'w-100 d-flex justify-content-between align-items-center p-1'}
                                              style={{backgroundColor: '#2d2d2d'}}>
-                                            <p className={'text-light m-0 p-0'}>Seat {seat.seat_number}</p>
-                                            <button type={'button'} className={'btn btn-danger rounded ml-2'}
+                                            <p className={'form-control bg-dark border-0 text-light m-0 p-2 align-content-center'}>Seat {seat.seat_number}</p>
+                                            <button type={'button'} className={'btn btn-danger rounded'}
                                                     onClick={() => removeSeatFromTable(seat.seat_number)}>X
                                             </button>
                                         </div>
