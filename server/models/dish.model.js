@@ -27,7 +27,13 @@ const DishSchema = new mongoose.Schema(
                     default: 0,
                 }
             },
-        ]
+        ],
+        category: {
+            type: String,
+            enum: ['Breakfast', 'Lunch', 'Dinner', 'Drinks'],
+            required: true,
+            default: 'Lunch'
+        }
     }
 );
 
