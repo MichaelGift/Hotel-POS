@@ -11,7 +11,6 @@ const PoS = () => {
                         <div className="mb-5 mt-2">
                             <h2>Hotel POS</h2></div>
                         <SideNavButton text="Menu" route='menu'/>
-                        <SideNavButton text="Reservations" route='reservations'/>
                         <SideNavButton text="Tables" route='tables'/>
                         <SideNavButton text="Dishes" route='dishes'/>
                         <SideNavButton text="Inventory" route='inventory'/>
