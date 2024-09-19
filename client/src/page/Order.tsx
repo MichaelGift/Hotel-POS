@@ -23,6 +23,11 @@ const Order = () => {
     const completedDishes = targetOrder?.dishes.filter(item => item.orderComplete)
     const pendingDishes = targetOrder?.dishes.filter(item => !item.orderComplete) || []
 
+    const [selectedCategory, setSelectedCategory] = useState<boolean>(false)
+    const filteredOrders = orders.filter(order => order.orderComplete === selectedCategory)
+
+    const handleCategoryChange = (showCompleteOrders: boolean) => setSelectedCategory(showCompleteOrders)
+
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -83,7 +88,13 @@ const Order = () => {
             })
 
             if (response.ok) {
-                alert("Order updated successfully")
+                alert("Order updated successfully");
+                setOrders(orders.map(order => {
+                    if (order._id === targetOrder._id) {
+                        return targetOrder
+                    }
+                    return order
+                }))
             } else {
                 const errorData = await response.json()
                 console.log(errorData)
@@ -101,8 +112,23 @@ const Order = () => {
         <>
             <div className={'row'}>
                 <div className={'col-8 d-flex flex-column'}>
+                    <ul className={'nav nav-pills mt-2 border-0 m-0'}>
+                        <li className={'nav-item'}>
+                            <a className={`nav-link ${!selectedCategory ? 'active' : ''} text-light`}
+                               onClick={() => handleCategoryChange(false)}>
+                                Pending
+                            </a>
+                        </li>
+                        <li className={'nav-item'}>
+                            <a className={`nav-link ${selectedCategory ? 'active' : ''} text-light`}
+                               onClick={() => handleCategoryChange(true)}>
+                                Completed
+                            </a>
+                        </li>
+
+                    </ul>
                     <div className={'row d-flex'}>
-                        {orders.map((dish) => (
+                        {filteredOrders.map((dish) => (
                             <div className={'col-md-4 p-1'}>
                                 <button
                                     className={'btn text-light w-100 h-100 p-2 rounded'}
