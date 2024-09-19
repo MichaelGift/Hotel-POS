@@ -74,6 +74,29 @@ const DishesV2 = () => {
             setRequiredQuantity(1);
         }
     }
+
+    const createNewDish = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/dishes/`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'Application/json'
+                },
+                body: JSON.stringify(newDish)
+            })
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Success");
+                // setDishes({...dishes, newDish})
+            } else {
+                console.log(`Something went wrong: ${data}`)
+            }
+        } catch (e) {
+            console.log(e.stack)
+        }
+    }
     return (
         <>
             <div className='row'>
@@ -123,7 +146,8 @@ const DishesV2 = () => {
                             </button>
 
                             <div content={'container'}>
-                                <div className={'row overflow-auto m-1'} style={{maxHeight: '40vh', borderRadius: '4%'}}>
+                                <div className={'row overflow-auto m-1'}
+                                     style={{maxHeight: '40vh', borderRadius: '4%'}}>
                                     {newDish.ingredients.map((ingredient, index) => (
                                         <button
                                             className={'btn w-100 d-flex text-light justify-content-between align-items-center p-2 rounded m-1'}
@@ -140,7 +164,9 @@ const DishesV2 = () => {
                                 </div>
                             </div>
                         </div>
-                        <button className={'btn btn-success rounded w-100 mt-auto'} type={'button'}>Add New Dish</button>
+                        <button className={'btn btn-success rounded w-100 mt-auto'} type={'button'}
+                                onClick={createNewDish}>Add New Dish
+                        </button>
                     </form>
                 </div>
             </div>
