@@ -13,7 +13,7 @@ const App = () => (
                 <Route index element={<Menu/>}/>
                 <Route path='menu' element={<Menu/>}/>
                 <Route path='reservations'/>
-                <Route path='tables'/>
+                <Route path='tables' element={<Table/>}/>
                 <Route path='inventory' element={<Inventory/>}/>
                 <Route path='dishes' element={<DishesV2/>}/>
             </Route>
