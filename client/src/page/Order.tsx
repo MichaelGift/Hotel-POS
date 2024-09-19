@@ -7,6 +7,7 @@ export interface Order {
     _id: string,
     bill: number,
     orderComplete: boolean,
+    table: string,
     dishes: {
         dish: Dish,
         quantityRequired: number,
@@ -15,13 +16,8 @@ export interface Order {
 }
 
 const Order = () => {
-    const [order, setOrders] = useState<Order[]>([])
-    const [targetOrder, setTargetOrder] = useState<Order | null>({
-        _id: '',
-        bill: 0,
-        orderComplete: false,
-        dishes: []
-    })
+    const [orders, setOrders] = useState<Order[]>([])
+    const [targetOrder, setTargetOrder] = useState<Order>(null)
 
     const [newOrder, setNewOrder] = useState({
         bill: 0,
@@ -65,6 +61,8 @@ const Order = () => {
 
             if (response.ok) {
                 alert("Order successfully deleted")
+                setOrders(orders.filter(order => order._id !== id))
+                setTargetOrder(null)
             } else {
                 const errorData = await response.json()
                 console.log(errorData)
@@ -100,181 +98,87 @@ const Order = () => {
 
     const loadOrderToUpdate = (order: Order) => setTargetOrder(order)
 
-    const addDishToOrder = () => {
-        if (dishId && requiredQuantity > 0) {
-            const dishToAdd = availableDishes.find((dish) => dish._id === dishId)
-
-            if (dishToAdd) {
-                if (targetOrder) {
-                    setTargetOrder({
-                            ...targetOrder,
-                            dishes: [
-                                ...targetOrder.dishes,
-                                {
-                                    dish: dishToAdd,
-                                    quantityRequired: requiredQuantity,
-                                    orderComplete: false
-                                }
-                            ]
-                        }
-                    );
-                } else {
-                    setNewOrder({
-                        ...newOrder,
-                        dishes: [
-                            ...newOrder.dishes,
-                            {
-                                dish: dishToAdd,
-                                quantityRequired: requiredQuantity
-                            }
-                        ]
-                    });
-                }
-                setDishId("");
-                setRequiredQuantity(1);
-            }
-        }
-    };
-
-    const addNewOrder = async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/orders`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(newOrder)
-                })
-            ;
-
-            const data = await response.json()
-
-            if (response.ok) {
-                alert("New order added");
-                setOrders([...order, data]);
-                setNewOrder({bill: 0, orderComplete: false, dishes: []})
-            } else {
-                const errorData = await response.json();
-                console.log(errorData);
-                alert("Something went wrong adding the new order");
-            }
-        } catch (error) {
-            console.log(error.stack);
-        }
-    }
-
-    const updateDishQuantity = (index: number, newQuantity: number) => {
-        if(!targetOrder) return
-        const updatedDishes = targetOrder.dishes.map((dish, i) =>
-            i === index ? {...dish, quantityRequired: newQuantity} : dish
-        );
-        setTargetOrder({...targetOrder, dishes: updatedDishes});
-    };
-
-    const deleteDishFromOrder = (index: number) => {
-        if(!targetOrder) return
-        const updatedDishes = targetOrder.dishes.filter((_, i) => i !== index);
-        setTargetOrder({...targetOrder, dishes: updatedDishes});
-    };
 
     return (
         <>
-            <h2>Orders</h2>
-            <ul>
-                {order.map((order) => {
-                    return (
-                        <li key={order._id}>
-                            Name: {order._id}, Amount: {order.bill}, Complete: {order.orderComplete}
-                            <button onClick={() => deleteOrder(order._id)}>Delete Order</button>
-                            <button onClick={() => loadOrderToUpdate(order)}>Update Order</button>
-                            <ul>
-                                {order.dishes.map((dish) => (
-                                    <li key={dish.dish._id}>
-                                        Name: {dish.dish.name}: Quantity: {dish.quantityRequired}
-                                    </li>
-                                ))}
-                            </ul>
-                        </li>
-                    )
-                })}
-            </ul>
-
-            <h2>Compose Order</h2>
-            <form onSubmit={addNewOrder}>
-                <select value={dishId} onChange={(e) => setDishId(e.target.value)}>
-                    <option value="">Select Dish</option>
-                    {availableDishes.map((dish) => (
-                        <option key={dish._id} value={dish._id}>
-                            {dish.name}
-                        </option>
-                    ))}
-                </select>
-
-                <input
-                    type="number"
-                    value={requiredQuantity}
-                    onChange={(e) => setRequiredQuantity(Number(e.target.value))}
-                    placeholder="Quantity Required"
-                />
-                <button type="button" onClick={addDishToOrder}>
-                    Add Dish
-                </button>
-                <h4>Selected dishes</h4>
-                <ul>
-                    {newOrder.dishes.map((dish) => (
-                        <li key={dish._id}>
-                            {dish.dish.name}: {dish.quantityRequired}
-                        </li>
-                    ))}
-                </ul>
-
-                <button type="button" onClick={addNewOrder}>
-                    Create Order
-                </button>
-            </form>
-
-            {targetOrder && (
-                <>
-                    <h2>Update Order</h2>
-                    <form onSubmit={updateOrder}>
-                        <select value={dishId} onChange={(e) => setDishId(e.target.value)}>
-                            <option value="">Select Dish</option>
-                            {availableDishes.map((dish) => (
-                                <option key={dish._id} value={dish._id}>
-                                    {dish.name}
-                                </option>
-                            ))}
-                        </select>
-
-                        <input
-                            type="number"
-                            value={requiredQuantity}
-                            onChange={(e) => setRequiredQuantity(Number(e.target.value))}
-                            placeholder="Quantity Required"
-                        />
-                        <button type="button" onClick={addDishToOrder}>
-                            Add Dish
-                        </button>
-                        <h3>{targetOrder._id}</h3>
-                        <ul>
-                            {targetOrder.dishes.map((dish, index) => (
-                                <li key={dish.dish._id}>
-                                    Name: {dish.dish.name}, Quantity:
-                                    <input
-                                        value={dish.quantityRequired}
-                                        onChange={(e) => updateDishQuantity(index, Number(e.target.value))}
-                                    />
-                                    <button type="button" onClick={() => deleteDishFromOrder(index)}>Remove Dish
+            <div className={'row'}>
+                <div className={'col-8 d-flex flex-column'}>
+                    <div className={'row d-flex'}>
+                        {orders.map((dish) => (
+                            <div className={'col-md-3 p-1'}>
+                                <button
+                                    className={'btn text-light w-100 h-100 p-3 rounded'}
+                                    style={{backgroundColor: '#2d2d2d'}}
+                                    onClick={() => loadOrderToUpdate(dish)}>
+                                    <h6 className={'m-0 p-0'}>{dish.table}</h6>
+                                    <p className={'text-secondary m-0 p-0'}>Ksh {dish.bill}</p>
+                                    {dish.dishes.map((item) => (
+                                        <p className={'text-light m-0 p-0'}>{item.dish.name}x{item.quantityRequired}</p>))}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className={'col-4 d-flex flex-column shadow-sm rounded w-auto'}>
+                    <div className={'mb-2 mt-2'}>
+                        {!targetOrder && (
+                            <>
+                                <h5>Order</h5>
+                                <p className={"text-muted"}>Click on an order to update it</p>
+                            </>
+                        )}
+                        {targetOrder && (
+                            <>
+                                <div className={'d-flex justify-content-between'}>
+                                    <div><h5>Order {targetOrder.table}</h5>
+                                        <p className={"text-muted"}>Update order</p>
+                                    </div>
+                                    <button className={'btn btn-danger'} onClick={() => deleteOrder(targetOrder._id)}>
+                                        Delete
                                     </button>
-                                </li>
-                            ))}
-                        </ul>
+                                </div>
+                            </>
+                        )}
+                    </div>
 
-                        <button type="button" onClick={updateOrder}>Update Order</button>
-                    </form>
-                </>
-            )}
+                    {targetOrder && (
+                        <>
+                            <div>
+                                <form>
+                                    <div className={'mb-3'}>
+                                        <label className={'form-label'}>Pending</label>
+                                        <div className={'row overflow-auto m-1'}
+                                             style={{maxHeight: '30vh', borderRadius: '4%'}}>
+                                            {targetOrder?.dishes.map((item, index) => (
+                                                <div className={'col-12 p-1'} key={index}>
+                                                    <div className={'input-group'}>
+                                                        <input type={'text'}
+                                                               className={'form-control bg-dark border-0 text-light'}
+                                                               value={item.dish.name} disabled/>
+                                                        <input type={'number'}
+                                                               className={'form-control bg-dark border-0 text-light'}
+                                                               value={item.quantityRequired} disabled/>
+                                                        <button className={'btn btn-primary'} type={'button'}>Complete
+                                                        </button>
+                                                    </div>
+                                                </div>))}
+                                        </div>
+                                    </div>
+                                    <div className={'mb-3'}>
+                                        <label className={'form-label'}>Completed</label>
+                                    </div>
 
+                                    <button className={'btn btn-success rounded w-100 mt-auto'} type={'button'}
+                                            onClick={updateOrder}>Update Order
+                                    </button>
+                                </form>
+                            </div>
+                        </>
+                    )}
+
+                </div>
+
+            </div>
         </>
     )
 }
