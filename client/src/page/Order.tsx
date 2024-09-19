@@ -48,6 +48,11 @@ const Order = () => {
                 ...targetOrder,
                 orderComplete: true
             })
+        } else if (pendingDishes.length > 0 && targetOrder && targetOrder.orderComplete) {
+            setTargetOrder({
+                ...targetOrder,
+                orderComplete: false
+            })
         }
     }
 
@@ -129,7 +134,7 @@ const Order = () => {
                     </ul>
                     <div className={'row d-flex'}>
                         {filteredOrders.map((order) => (
-                            <div className={'col-md-4 p-1'}>
+                            <div className={'col-md-3 p-1'}>
                                 <button
                                     className={'btn text-light w-100 h-100 p-2 rounded'}
                                     style={{backgroundColor: '#2d2d2d'}}
