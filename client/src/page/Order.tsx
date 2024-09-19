@@ -128,15 +128,15 @@ const Order = () => {
 
                     </ul>
                     <div className={'row d-flex'}>
-                        {filteredOrders.map((dish) => (
+                        {filteredOrders.map((order) => (
                             <div className={'col-md-4 p-1'}>
                                 <button
                                     className={'btn text-light w-100 h-100 p-2 rounded'}
                                     style={{backgroundColor: '#2d2d2d'}}
-                                    onClick={() => loadOrderToUpdate(dish)}>
-                                    <h5 className={'m-0 p-0'}>{dish.table.name}</h5>
-                                    <p className={'text-secondary m-0 mb-2 p-0'}>Ksh {dish.bill}</p>
-                                    {dish.dishes.map((item) => (
+                                    onClick={() => loadOrderToUpdate(order)}>
+                                    <h5 className={'m-0 p-0'}>{order?.table?.name}</h5>
+                                    <p className={'text-secondary m-0 mb-2 p-0'}>Ksh {order.bill}</p>
+                                    {order.dishes.map((item) => (
                                         <p className={'text-light m-0 p-0'}>{item.dish.name} x{item.quantityRequired}</p>))}
                                 </button>
                             </div>
@@ -154,7 +154,7 @@ const Order = () => {
                         {targetOrder && (
                             <>
                                 <div className={'d-flex justify-content-between'}>
-                                    <div><h5>{targetOrder.table.name} Order</h5>
+                                    <div><h5>{targetOrder.table?.name} Order</h5>
                                         <p className={"text-muted"}>Update order</p>
                                     </div>
                                     <button className={'btn btn-danger'} onClick={() => deleteOrder(targetOrder._id)}>
