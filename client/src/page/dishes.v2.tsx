@@ -151,6 +151,11 @@ const DishesV2 = () => {
         setTargetDish({...targetDish, [e.target.name]: e.target.value});
     }
 
+    const removeIngredientFromDish = (index: number) => {
+        const updatedIngredients = newDish.ingredients.filter((_, i) => i !== index);
+        setNewDish({...newDish, ingredients: updatedIngredients});
+    }
+
     return (
         <>
             {showModal && (
@@ -218,7 +223,8 @@ const DishesV2 = () => {
                                             className={'btn w-100 d-flex text-light justify-content-between align-items-center p-2 rounded m-1'}
                                             style={{backgroundColor: '#2d2d2d'}}
                                             key={index}
-                                            type={'button'}>
+                                            type={'button'}
+                                            onClick={() => removeIngredientFromDish(index)}>
                                             <div className="d-flex">
                                                 <h6 className={'mb-0'}>{ingredient.ingredient.name}</h6>
                                                 <h6 className={'mb-0 text-secondary ms-3'}> x{ingredient.quantityRequired}</h6>
