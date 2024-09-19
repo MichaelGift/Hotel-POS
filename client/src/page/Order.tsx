@@ -90,8 +90,8 @@ const Order = () => {
                                     className={'btn text-light w-100 h-100 p-2 rounded'}
                                     style={{backgroundColor: '#2d2d2d'}}
                                     onClick={() => loadOrderToUpdate(dish)}>
-                                    <h3 className={'m-0 p-0'}>{dish.table.name}</h3>
-                                    <p className={'text-secondary m-0 p-0'}>Ksh {dish.bill}</p>
+                                    <h5 className={'m-0 p-0'}>{dish.table.name}</h5>
+                                    <p className={'text-secondary m-0 mb-2 p-0'}>Ksh {dish.bill}</p>
                                     {dish.dishes.map((item) => (
                                         <p className={'text-light m-0 p-0'}>{item.dish.name} x{item.quantityRequired}</p>))}
                                 </button>
