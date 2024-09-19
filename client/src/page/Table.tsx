@@ -54,7 +54,7 @@ const Table = () => {
         }
 
         fetchTables()
-    });
+    } , []);
 
     const updateTable = async () => {
         try {
@@ -147,16 +147,23 @@ const Table = () => {
             seats: targetTable.seats.filter((seat) => seat.seat_number !== seat_number)
         })
     }
-
     return (
         <>
             {showModal && (
-                <UpdateTableModal {...targetTable} onClose={handleClose} onUpdate={updateTable}
+                <UpdateTableModal {...targetTable} onClose={handleClose}
+                                  onUpdate={() => {
+                                      updateTable()
+                                      handleClose()
+                                  }}
                                   removeSeatFromTable={removeSeatFromTargetTable}
                                   onDelete={() => {
                                       deleteTable()
                                       handleClose()
                                   }}
+                                  handleUpdate={(e) => setTargetTable({
+                                      ...targetTable,
+                                      [e.target.name]: e.target.value
+                                  })}
                 />)}
             {showModal && <div className="modal-backdrop fade show"></div>}
 
