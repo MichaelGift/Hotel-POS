@@ -6,6 +6,7 @@ export interface Dish {
   _id: string;
   name: string;
   price: number;
+  category: string;
   ingredients: {
     ingredient: Ingredient;
     quantityRequired: number;
