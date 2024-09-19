@@ -3,12 +3,14 @@ const UpdateIngredientModal = ({name, price, quantity, onClose, onDelete, onUpda
         <div className="modal fade show" style={{display: "block"}} tabIndex="-1" role="dialog">
             <div className="model fade show modal-dialog modal-dialog-centered rounded" role="document">
                 <div className="modal-content" style={{backgroundColor: '#2d2d2d', borderRadius: '4%'}}>
-                    <div className="modal-header">
+                    <div className="modal-header border-0">
                         <h5 className="modal-title">{name}</h5>
-                        <button type="button" className="close btn-secondary btn text-light rounded-circle"
-                                onClick={onClose}>X
+                        <button type="button" className={`close btn-secondary btn text-light`}
+                                style={{borderRadius: '25%'}}
+                                onClick={onClose}>&times;
                         </button>
                     </div>
+
                     <div className="modal-body">
                         <form>
                             <div className="mb-3">
@@ -28,7 +30,8 @@ const UpdateIngredientModal = ({name, price, quantity, onClose, onDelete, onUpda
                             </div>
                         </form>
                     </div>
-                    <div className="modal-footer">
+
+                    <div className="modal-footer border-0">
                         <button type="button" className="btn btn-secondary rounded" onClick={onClose}>
                             Close
                         </button>
