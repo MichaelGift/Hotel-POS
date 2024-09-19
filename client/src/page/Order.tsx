@@ -2,12 +2,13 @@ import {Dish} from "./dishes.tsx";
 import {useEffect, useState} from "react";
 
 import {BASE_URL} from "../App.tsx";
+import Table from "./Table.tsx";
 
 export interface Order {
     _id: string,
     bill: number,
     orderComplete: boolean,
-    table: string,
+    table: Table,
     dishes: {
         dish: Dish,
         quantityRequired: number,
@@ -19,16 +20,6 @@ const Order = () => {
     const [orders, setOrders] = useState<Order[]>([])
     const [targetOrder, setTargetOrder] = useState<Order>(null)
 
-    const [newOrder, setNewOrder] = useState({
-        bill: 0,
-        orderComplete: false,
-        dishes: []
-    })
-
-    const [availableDishes, setAvailableDishes] = useState<Dish[]>([])
-    const [dishId, setDishId] = useState("")
-    const [requiredQuantity, setRequiredQuantity] = useState(1)
-
     useEffect(() => {
         const fetchOrder = async () => {
             try {
@@ -39,18 +30,7 @@ const Order = () => {
                 console.log(error.stack)
             }
         }
-
-        const fetchDish = async () => {
-            try {
-                const response = await fetch(`${BASE_URL}/dishes`)
-                const dishes = await response.json()
-                setAvailableDishes(dishes)
-            } catch (error) {
-                console.log(error.stack)
-            }
-        }
         fetchOrder();
-        fetchDish();
     }, []);
 
     const deleteOrder = async (id: string) => {
@@ -105,15 +85,15 @@ const Order = () => {
                 <div className={'col-8 d-flex flex-column'}>
                     <div className={'row d-flex'}>
                         {orders.map((dish) => (
-                            <div className={'col-md-3 p-1'}>
+                            <div className={'col-md-4 p-1'}>
                                 <button
-                                    className={'btn text-light w-100 h-100 p-3 rounded'}
+                                    className={'btn text-light w-100 h-100 p-2 rounded'}
                                     style={{backgroundColor: '#2d2d2d'}}
                                     onClick={() => loadOrderToUpdate(dish)}>
-                                    <h6 className={'m-0 p-0'}>{dish.table}</h6>
+                                    <h3 className={'m-0 p-0'}>{dish.table.name}</h3>
                                     <p className={'text-secondary m-0 p-0'}>Ksh {dish.bill}</p>
                                     {dish.dishes.map((item) => (
-                                        <p className={'text-light m-0 p-0'}>{item.dish.name}x{item.quantityRequired}</p>))}
+                                        <p className={'text-light m-0 p-0'}>{item.dish.name} x{item.quantityRequired}</p>))}
                                 </button>
                             </div>
                         ))}
@@ -130,7 +110,7 @@ const Order = () => {
                         {targetOrder && (
                             <>
                                 <div className={'d-flex justify-content-between'}>
-                                    <div><h5>Order {targetOrder.table}</h5>
+                                    <div><h5>{targetOrder.table.name} Order</h5>
                                         <p className={"text-muted"}>Update order</p>
                                     </div>
                                     <button className={'btn btn-danger'} onClick={() => deleteOrder(targetOrder._id)}>
