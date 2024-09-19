@@ -9,14 +9,17 @@ const DishesV2 = () => {
     const [newDish, setNewDish] = useState({
         name: '',
         price: '',
+        category: '',
         ingredients: []
     });
     const [availableIngredients, setIngredients] = useState<Ingredient[]>([]);
     const [ingredientId, setIngredientId] = useState("");
     const [requiredQuantity, setRequiredQuantity] = useState(1);
 
-    const [targetDish, setTargetDish] = useState<Dish>(null)
-    const [showModal, setShowModal] = useState(false)
+    const [targetDish, setTargetDish] = useState<Dish>(null);
+    const [showModal, setShowModal] = useState(false);
+
+    const [category, setCategory] = useState("");
 
     const handleClose = () => {
         setTargetDish(null);
@@ -176,7 +179,7 @@ const DishesV2 = () => {
                                 <button className='btn text-light w-100 h-100 p-3 rounded'
                                         style={{backgroundColor: "#2d2d2d"}}
                                         onClick={() => handleShow(dish)}>
-                                    <h4 className='m-0 p-0'>{dish.name}</h4>
+                                    <h5 className='m-0 p-0'>{dish.name}</h5>
                                     <p className='text-secondary m-0 p-0'>Ksh {dish.price}</p>
                                 </button>
                             </div>
@@ -195,6 +198,22 @@ const DishesV2 = () => {
                                    className={'form-control'}/>
                         </div>
 
+                        <div className={'mb-3'}>
+                            <label className={'form-label'}>Category</label>
+                            <select className={'form-select form-control'}
+                                    onChange={(e) => {
+                                        setNewDish({...newDish, category: e.target.value});
+                                        setCategory(e.target.value)
+                                    }}
+                                    value={category}
+                                    required>
+                                <option value={''}>Select Category</option>
+                                <option value={'Breakfast'}>Breakfast</option>
+                                <option value={'Lunch'}>Lunch</option>
+                                <option value={'Dinner'}>Dinner</option>
+                                <option value={'Drinks'}>Drink</option>
+                            </select>
+                        </div>
                         <div className={'mb-3'}>
                             <label className={'form-label'}>Price</label>
                             <input name={'price'} type={'number'} value={newDish.price} onChange={handleDishCreation}
