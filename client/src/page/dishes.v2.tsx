@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Dish} from "./dishes.tsx";
 import {BASE_URL} from "../App.tsx";
 import {Ingredient} from "./Inventory.tsx";
+import UpdateDishModal from "../components/UpdateDishModal.tsx";
 
 const DishesV2 = () => {
     const [dishes, setDishes] = useState<Dish[]>([]);
@@ -13,6 +14,18 @@ const DishesV2 = () => {
     const [availableIngredients, setIngredients] = useState<Ingredient[]>([]);
     const [ingredientId, setIngredientId] = useState("");
     const [requiredQuantity, setRequiredQuantity] = useState(1);
+
+    const [targetDish, setTargetDish] = useState<Dish>(null)
+    const [showModal, setShowModal] = useState(false)
+
+    const handleClose = () => {
+        setTargetDish(null);
+        setShowModal(false);
+    }
+    const handleShow = (dish) => {
+        setTargetDish(dish);
+        setShowModal(true);
+    }
 
     useEffect(() => {
         const fetchDishes = async () => {
@@ -97,15 +110,67 @@ const DishesV2 = () => {
             console.log(e.stack)
         }
     }
+
+    const updateDish = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/dishes/${targetDish._id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "Application/json"
+                    },
+                    body: JSON.stringify(targetDish)
+                })
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Success updating");
+            } else {
+                console.log(data);
+            }
+        } catch (error) {
+            console.log(error.stack);
+        }
+    }
+
+    const deleteDish = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/dishes/${targetDish._id}`, {method: "DELETE",})
+
+            const data = await response.json()
+
+            if (response.ok) console.log("Success deleting");
+            else console.log(data);
+        } catch (error) {
+            console.log(error.stack)
+        }
+    }
+
+    const handleUpdate = (e) => {
+        setTargetDish({...targetDish, [e.target.name]: e.target.value});
+    }
+
     return (
         <>
+            {showModal && (
+                <UpdateDishModal {...targetDish}
+                                 onClose={handleClose}
+                                 onDelete={deleteDish}
+                                 onUpdate={updateDish}
+                                 handleUpdate={handleUpdate}
+                />
+            )}
+
+            {showModal && <div className="modal-backdrop fade show"></div>}
             <div className='row'>
                 <div className='col-8 d-flex flex-column'>
                     <div className='row d-flex'>
                         {dishes.map((dish) => (
                             <div className='col-md-3 p-1' key={dish._id}>
                                 <button className='btn text-light w-100 h-100 p-3 rounded'
-                                        style={{backgroundColor: "#2d2d2d"}}>
+                                        style={{backgroundColor: "#2d2d2d"}}
+                                        onClick={() => handleShow(dish)}>
                                     <h4 className='m-0 p-0'>{dish.name}</h4>
                                     <p className='text-secondary m-0 p-0'>Ksh {dish.price}</p>
                                 </button>
