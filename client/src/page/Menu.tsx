@@ -47,17 +47,36 @@ const Menu = () => {
     }, [])
 
     const addDishToOrder = (dish) => {
-        setNewOrder({
-                ...newOrder,
+    setNewOrder((prevOrder) => {
+        // Check if the dish already exists in the order
+        const dishExists = prevOrder.dishes.find(item => item.dish._id === dish._id);
+
+        if (dishExists) {
+            // If the dish exists, map through and increment its quantity
+            return {
+                ...prevOrder,
+                dishes: prevOrder.dishes.map(item =>
+                    item.dish._id === dish._id
+                    ? {...item, quantityRequired: item.quantityRequired + 1}
+                    : item
+                )
+            };
+        } else {
+            // If the dish doesn't exist, add it as a new dish
+            return {
+                ...prevOrder,
                 dishes: [
-                    ...newOrder.dishes, {
+                    ...prevOrder.dishes,
+                    {
                         dish: dish,
                         quantityRequired: 1
                     }
                 ]
-            }
-        )
-    }
+            };
+        }
+    });
+};
+
     const removeDishFromOrder = (index: number) => {
         const updatedDishes = newOrder.dishes.filter((_, i) => i !== index);
         setNewOrder({...newOrder, dishes: updatedDishes});
