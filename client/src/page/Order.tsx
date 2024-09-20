@@ -1,8 +1,8 @@
-import {Dish} from "./dishes.tsx";
 import {useEffect, useState} from "react";
 
 import {BASE_URL} from "../App.tsx";
 import Table from "./Table.tsx";
+import {Dish} from "./dishes.tsx";
 
 export interface Order {
     _id: string,

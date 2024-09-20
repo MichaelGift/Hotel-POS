@@ -1,309 +1,278 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {BASE_URL} from "../App.tsx";
 import {Ingredient} from "./Inventory.tsx";
+import UpdateDishModal from "../components/UpdateDishModal.tsx";
 
 export interface Dish {
-  _id: string;
-  name: string;
-  price: number;
-  category: string;
-  ingredients: {
-    ingredient: Ingredient;
-    quantityRequired: number;
     _id: string;
-  }[];
+    name: string;
+    price: number;
+    category: string;
+    ingredients: {
+        ingredient: Ingredient;
+        quantityRequired: number;
+        _id: string;
+    }[];
 }
 
 const Dishes = () => {
-  const [dishes, setDishes] = useState<Dish[]>([]);
-  const [newDish, setNewDish] = useState({
-    name: "",
-    price: 0,
-    ingredients: []
-  });
+    const [dishes, setDishes] = useState<Dish[]>([]);
+    const [newDish, setNewDish] = useState({
+        name: '',
+        price: '',
+        category: '',
+        ingredients: []
+    });
+    const [availableIngredients, setIngredients] = useState<Ingredient[]>([]);
+    const [ingredientId, setIngredientId] = useState("");
+    const [requiredQuantity, setRequiredQuantity] = useState(1);
 
-  const [availableIngredients, setAvailableIngredients] = useState<Ingredient[]>([]);
-  const [ingredientId, setIngredientId] = useState("");
-  const [quantityRequired, setQuantityRequired] = useState(1);
-  const [targetDish, setTargetDish] = useState<Dish | null>(null); // For update
+    const [targetDish, setTargetDish] = useState<Dish>(null);
+    const [showModal, setShowModal] = useState(false);
 
-  // Fetch Dishes and Available Ingredients
-  useEffect(() => {
-    const fetchDishes = async () => {
-      try {
-        const response: Response = await fetch(`${BASE_URL}/dishes`);
-        const dishes = await response.json();
-        setDishes(dishes);
-      } catch (error) {
-        console.log(error.stack);
-      }
-    };
+    const [category, setCategory] = useState("");
 
-    const fetchIngredients = async () => {
-      try {
-        const response: Response = await fetch(`${BASE_URL}/ingredients`);
-        const ingredients = await response.json();
-        setAvailableIngredients(ingredients);
-      } catch (error) {
-        console.log(error.stack);
-      }
-    };
-
-    fetchDishes();
-    fetchIngredients();
-  }, []);
-
-  const handleDishChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (targetDish) {
-      setTargetDish({
-        ...targetDish,
-        [e.target.name]: e.target.value
-      });
-    } else {
-      setNewDish({
-        ...newDish,
-        [e.target.name]: e.target.value
-      });
+    const handleClose = () => {
+        setTargetDish(null);
+        setShowModal(false);
     }
-  };
+    const handleShow = (dish) => {
+        setTargetDish(dish);
+        setShowModal(true);
+    }
 
-  const addIngredientToDish = () => {
-    if (ingredientId && quantityRequired > 0) {
-      const ingredientToAdd = availableIngredients.find((ing) => ing._id === ingredientId);
+    useEffect(() => {
+        const fetchDishes = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/dishes`);
+                const data = await response.json();
 
-      if (ingredientToAdd) {
-        if (targetDish) {
-          setTargetDish({
-            ...targetDish,
-            ingredients: [
-              ...targetDish.ingredients,
-              {
-                ingredient: ingredientToAdd,
-                quantityRequired: quantityRequired,
-                _id: ingredientToAdd._id
-              }
-            ]
-          });
-        } else {
-          setNewDish({
-            ...newDish,
-            ingredients: [
-              ...newDish.ingredients,
-              {
-                ingredient: ingredientToAdd,
-                quantityRequired: quantityRequired,
-                _id: ingredientToAdd._id
-              }
-            ]
-          });
+                if (response.ok) {
+                    console.log("Success");
+                    setDishes(data)
+                } else {
+                    console.log(data);
+                }
+            } catch (error) {
+                console.log(error.stack)
+            }
         }
-        setIngredientId("");
-        setQuantityRequired(1);
-      }
+        const fetchIngredients = async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/ingredients`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log("Successful ingredients");
+                    setIngredients(data)
+                } else {
+                    console.log(data)
+                }
+            } catch (error) {
+                console.log(error.stack)
+            }
+        }
+        fetchDishes();
+        fetchIngredients();
+    }, []);
+
+    const handleDishCreation = (e) => {
+        setNewDish({...newDish, [e.target.name]: e.target.value})
     }
-  };
 
-  const addNewDish = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response: Response = await fetch(`${BASE_URL}/dishes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newDish)
-      });
+    const addIngredientToDish = () => {
+        if (ingredientId && requiredQuantity > 0) {
+            const ingredientToAdd = availableIngredients.find((ing) => ing._id === ingredientId);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("New Dish Added");
-        setDishes([...dishes, data]);
-        setNewDish({ name: "", price: 0, ingredients: [] }); // Reset form after adding
-      } else {
-        console.log(data);
-      }
-    } catch (error) {
-      console.log(error.stack);
+            if (ingredientToAdd) {
+                setNewDish({
+                    ...newDish,
+                    ingredients: [
+                        ...newDish.ingredients,
+                        {
+                            ingredient: ingredientToAdd,
+                            quantityRequired: requiredQuantity,
+                            _id: ingredientToAdd._id
+                        }
+                    ]
+                });
+            }
+            setIngredientId("");
+            setRequiredQuantity(1);
+        }
     }
-  };
 
-  const deleteDish = async (id: string) => {
-    try {
-      const response: Response = await fetch(`${BASE_URL}/dishes/${id}`, {
-        method: "DELETE"
-      });
-      if (response.ok) {
-        alert("Dish deleted successfully");
-        setDishes(dishes.filter((dish) => dish._id !== id));
-      } else {
-        const errorData = await response.json();
-        console.log(errorData);
-        alert("Something went wrong");
-      }
-    } catch (error) {
-      console.log(error.stack);
+    const createNewDish = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/dishes/`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'Application/json'
+                },
+                body: JSON.stringify(newDish)
+            })
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Success");
+                // setDishes({...dishes, newDish})
+            } else {
+                console.log(`Something went wrong: ${data}`)
+            }
+        } catch (e) {
+            console.log(e.stack)
+        }
     }
-  };
 
-  const updateDish = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!targetDish) return;
+    const updateDish = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/dishes/${targetDish._id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "Application/json"
+                    },
+                    body: JSON.stringify(targetDish)
+                })
 
-    try {
-      const response: Response = await fetch(`${BASE_URL}/dishes/${targetDish._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(targetDish)
-      });
+            const data = await response.json();
 
-      if (response.ok) {
-        alert("Dish has been updated");
-        const updatedDish = await response.json();
-        setDishes(dishes.map((dish) => (dish._id === targetDish._id ? updatedDish : dish)));
-        setTargetDish(null); // Reset update form
-      } else {
-        const errorData = await response.json();
-        console.log(errorData);
-        alert("Something went wrong");
-      }
-    } catch (error) {
-      console.log(error.stack);
+            if (response.ok) {
+                console.log("Success updating");
+            } else {
+                console.log(data);
+            }
+        } catch (error) {
+            console.log(error.stack);
+        }
     }
-  };
 
-  // Load a dish's details into the form for updating
-  const loadDishToUpdate = (dish: Dish) => {
-    setTargetDish(dish);
-  };
+    const deleteDish = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/dishes/${targetDish._id}`, {method: "DELETE",})
 
-  return (
-    <>
-      <h2>Dishes</h2>
-      <ul>
-        {dishes.map((dish: Dish) => (
-          <li key={dish._id}>
-            Name: {dish.name}, Price: {dish.price}
-            <button onClick={() => deleteDish(dish._id)}>Delete Dish</button>
-            <button onClick={() => loadDishToUpdate(dish)}>Update</button>
-            <ul>
-              {dish.ingredients.map((ingredient) => (
-                <li key={ingredient._id}>
-                  Ingredient: {ingredient.ingredient.name}, Quantity Required: {ingredient.quantityRequired}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+            const data = await response.json()
 
-      <h2>Add New Dish</h2>
-      <form onSubmit={addNewDish}>
-        <input
-          type="text"
-          name="name"
-          value={newDish.name}
-          onChange={handleDishChange}
-          placeholder="Dish Name"
-          required
-        />
-        <input
-          type="number"
-          name="price"
-          value={newDish.price}
-          onChange={handleDishChange}
-          placeholder="Dish Price"
-          required
-        />
+            if (response.ok) console.log("Success deleting");
+            else console.log(data);
+        } catch (error) {
+            console.log(error.stack)
+        }
+    }
 
-        <h3>Add Ingredients</h3>
-        <select value={ingredientId} onChange={(e) => setIngredientId(e.target.value)}>
-          <option value="">Select Ingredient</option>
-          {availableIngredients.map((ingredient) => (
-            <option key={ingredient._id} value={ingredient._id}>
-              {ingredient.name}
-            </option>
-          ))}
-        </select>
-        <input
-          type="number"
-          value={quantityRequired}
-          onChange={(e) => setQuantityRequired(Number(e.target.value))}
-          placeholder="Quantity Required"
-        />
-        <button type="button" onClick={addIngredientToDish}>
-          Add Ingredient
-        </button>
+    const handleUpdate = (e) => {
+        setTargetDish({...targetDish, [e.target.name]: e.target.value});
+    }
 
-        <h4>Selected Ingredients</h4>
-        <ul>
-          {newDish.ingredients.map((ingredient) => (
-            <li key={ingredient._id}>
-              {ingredient.ingredient.name}: {ingredient.quantityRequired}
-            </li>
-          ))}
-        </ul>
+    const removeIngredientFromDish = (index: number) => {
+        const updatedIngredients = newDish.ingredients.filter((_, i) => i !== index);
+        setNewDish({...newDish, ingredients: updatedIngredients});
+    }
 
-        <button type="submit">Add New Dish</button>
-      </form>
-
-      {targetDish && (
+    return (
         <>
-          <h2>Update Dish</h2>
-          <form onSubmit={updateDish}>
-            <input
-              type="text"
-              name="name"
-              value={targetDish.name}
-              onChange={handleDishChange}
-              placeholder="Dish Name"
-              required
-            />
-            <input
-              type="number"
-              name="price"
-              value={targetDish.price}
-              onChange={handleDishChange}
-              placeholder="Dish Price"
-              required
-            />
+            {showModal && (
+                <UpdateDishModal {...targetDish}
+                                 onClose={handleClose}
+                                 onDelete={deleteDish}
+                                 onUpdate={updateDish}
+                                 handleUpdate={handleUpdate}
+                />
+            )}
 
-            <h3>Update Ingredients</h3>
-            <select value={ingredientId} onChange={(e) => setIngredientId(e.target.value)}>
-              <option value="">Select Ingredient</option>
-              {availableIngredients.map((ingredient) => (
-                <option key={ingredient._id} value={ingredient._id}>
-                  {ingredient.name}
-                </option>
-              ))}
-            </select>
-            <input
-              type="number"
-              value={quantityRequired}
-              onChange={(e) => setQuantityRequired(Number(e.target.value))}
-              placeholder="Quantity Required"
-            />
-            <button type="button" onClick={addIngredientToDish}>
-              Add Ingredient
-            </button>
+            {showModal && <div className="modal-backdrop fade show"></div>}
+            <div className='row'>
+                <div className='col-8 d-flex flex-column'>
+                    <div className='row d-flex'>
+                        {dishes.map((dish) => (
+                            <div className='col-md-3 p-1' key={dish._id}>
+                                <button className='btn text-light w-100 h-100 p-3 rounded'
+                                        style={{backgroundColor: "#2d2d2d"}}
+                                        onClick={() => handleShow(dish)}>
+                                    <h5 className='m-0 p-0'>{dish.name}</h5>
+                                    <p className='text-secondary m-0 p-0'>Ksh {dish.price}</p>
+                                </button>
+                            </div>
+                        ))
+                        }
+                    </div>
+                </div>
+                <div className='col-4 d-flex flex-column shadow-sm rounded w-auto'>
+                    <div className="mb-2 mt-2">
+                        <h5>New Dish</h5>
+                    </div>
+                    <form>
+                        <div className='mb-3'>
+                            <label className='form-label'>Name</label>
+                            <input name='name' type='text' value={newDish.name} onChange={handleDishCreation}
+                                   className={'form-control'}/>
+                        </div>
 
-            <h4>Selected Ingredients</h4>
-            <ul>
-              {targetDish.ingredients.map((ingredient) => (
-                <li key={ingredient._id}>
-                  {ingredient.ingredient.name}: {ingredient.quantityRequired}
-                </li>
-              ))}
-            </ul>
+                        <div className={'mb-3'}>
+                            <label className={'form-label'}>Category</label>
+                            <select className={'form-select form-control'}
+                                    onChange={(e) => {
+                                        setNewDish({...newDish, category: e.target.value});
+                                        setCategory(e.target.value)
+                                    }}
+                                    value={category}
+                                    required>
+                                <option value={''}>Select Category</option>
+                                <option value={'Breakfast'}>Breakfast</option>
+                                <option value={'Lunch'}>Lunch</option>
+                                <option value={'Dinner'}>Dinner</option>
+                                <option value={'Drinks'}>Drink</option>
+                            </select>
+                        </div>
+                        <div className={'mb-3'}>
+                            <label className={'form-label'}>Price</label>
+                            <input name={'price'} type={'number'} value={newDish.price} onChange={handleDishCreation}
+                                   className={'form-control'}/>
+                        </div>
+                        <div className={'mb-3'}>
+                            <label className={'form-label'}>Ingredients</label>
+                            <select className={'form-select form-control'} value={ingredientId}
+                                    onChange={(e) => setIngredientId(e.target.value)}>
+                                {availableIngredients.map((ingr) => (
+                                    <option key={ingr._id} value={ingr._id}>{ingr.name}</option>
+                                ))}
+                            </select>
+                            <input className={'form-control mt-2'} value={requiredQuantity}
+                                   placeholder={'Ingredient quantity'}
+                                   onChange={(e) => setRequiredQuantity(Number(e.target.value))}/>
+                            <button className={'btn btn-primary w-100 mt-2'} type={'button'}
+                                    onClick={addIngredientToDish}>Add Ingredient
+                            </button>
 
-            <button type="submit">Update Dish</button>
-          </form>
+                            <div content={'container'}>
+                                <div className={'row overflow-auto m-1'}
+                                     style={{maxHeight: '40vh', borderRadius: '4%'}}>
+                                    {newDish.ingredients.map((ingredient, index) => (
+                                        <button
+                                            className={'btn w-100 d-flex text-light justify-content-between align-items-center p-2 rounded m-1'}
+                                            style={{backgroundColor: '#2d2d2d'}}
+                                            key={index}
+                                            type={'button'}
+                                            onClick={() => removeIngredientFromDish(index)}>
+                                            <div className="d-flex">
+                                                <h6 className={'mb-0'}>{ingredient.ingredient.name}</h6>
+                                                <h6 className={'mb-0 text-secondary ms-3'}> x{ingredient.quantityRequired}</h6>
+                                            </div>
+                                            <h6 className={'mb-0'}>Ksh {ingredient.ingredient.price}</h6>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <button className={'btn btn-success rounded w-100 mt-auto'} type={'button'}
+                                onClick={createNewDish}>Add New Dish
+                        </button>
+                    </form>
+                </div>
+            </div>
         </>
-      )}
-    </>
-  );
-};
+    )
+}
 
-export default Dishes;
+export default Dishes

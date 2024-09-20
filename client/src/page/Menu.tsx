@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import {Dish} from "./dishes.tsx";
 import {MenuDish, OrderItem} from "../components";
 import {BASE_URL} from "../App.tsx";
 import Table from "./Table.tsx";
+import {Dish} from "./dishes.tsx";
 
 const Menu = () => {
     const [menu, setMenu] = useState<Dish[]>([])
