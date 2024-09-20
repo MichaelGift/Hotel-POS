@@ -1,4 +1,4 @@
-const formatNumberWithCommas = (number) => {
+const formatNumberWithCommas = (number: number) => {
     return new Intl.NumberFormat().format(number);
 };
 
