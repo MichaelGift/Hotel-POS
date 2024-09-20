@@ -129,7 +129,7 @@ const Inventory = () => {
 
             <div className='row'>
                 <div className='col-8 d-flex flex-column'>
-                    <div className='row d-flex'>
+                    <div className='row d-flex overflow-auto' style={{maxHeight: '99vh'}}>
                         {ingredients.map((ingr) => (
                             <IngredientCard {...ingr} key={ingr._id} onClick={() => handleShow(ingr)}/>
                         ))}
