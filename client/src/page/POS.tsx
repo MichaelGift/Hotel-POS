@@ -40,8 +40,7 @@ const PoS = () => {
                             </li>
                         </ul>
 
-                        <div className={'mt-auto w-100 d-flex justify-content-center'}>
-
+                        <div className={'mt-auto w-100'}>
                             <figure className="text-center">
                                 <blockquote className="blockquote">
                                     <p className={'small text-muted'}>Do hard things.</p>
