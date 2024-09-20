@@ -17,4 +17,4 @@ const App = () => (
 )
 
 export default App
-export const BASE_URL = "http://hotel-pos-api/api";
+export const BASE_URL = "https://hotel-pos-api.vercel.app/api";
