@@ -9,8 +9,8 @@ const PoS = () => {
             <div className="container text-light mh-100 mw-100" style={{backgroundColor: '#111315'}}>
                 <div className="row">
                     <div className="col-2 d-flex flex-column shadow-lg nav" style={{height: '100vh'}}>
-                        <div className="mb-5 mt-2">
-                            <h2>Hotel POS</h2>
+                        <div className="mb-5 m-2">
+                            <h2>&#127858; Hotel POS</h2>
                         </div>
                         <ul className={'nav nav-pills flex-column'}>
                             <li className={'nav-item'}>
