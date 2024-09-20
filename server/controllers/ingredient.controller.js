@@ -11,7 +11,7 @@ const addIngredient = async (req, res) => {
 
 const getIngredients = async (req, res) => {
     try {
-        const ingredients = await Ingredient.find({})
+        const ingredients = await Ingredient.find({}).sort({name: 1})
         res.status(200).json(ingredients)
     } catch (error) {
         res.status(500).json({message: error.message})
