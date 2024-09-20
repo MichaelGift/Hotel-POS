@@ -136,13 +136,17 @@ const Order = () => {
                         {filteredOrders.map((order) => (
                             <div className={'col-md-3 p-1'}>
                                 <button
-                                    className={'btn text-light w-100 h-100 p-2 rounded'}
-                                    style={{backgroundColor: '#2d2d2d'}}
-                                    onClick={() => loadOrderToUpdate(order)}>
+                                    className={'btn text-light w-100 h-100 p-2 rounded overflow-auto'}
+                                    style={{backgroundColor: '#2d2d2d', maxHeight: '30vh'}}
+                                    onClick={() => loadOrderToUpdate(order)}
+                                >
                                     <h5 className={'m-0 p-0'}>{order?.table?.name}</h5>
                                     <p className={'text-secondary m-0 mb-2 p-0'}>Ksh {order.bill}</p>
                                     {order.dishes.map((item) => (
-                                        <p className={'text-light m-0 p-0'}>{item.dish.name} x{item.quantityRequired}</p>))}
+                                        <p className={`m-0 p-0 ${item.orderComplete ? 'text-muted' : 'text-light '}`}>
+                                            {item.dish.name} x{item.quantityRequired}
+                                        </p>
+                                    ))}
                                 </button>
                             </div>
                         ))}

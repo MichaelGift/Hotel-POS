@@ -169,9 +169,9 @@ const Table = () => {
 
             <div className={'row'}>
                 <div className={'col-8 d-flex flex-column'}>
-                    <div className={'row d-flex'}>
+                    <div className={'row d-flex overflow-auto'} style={{maxHeight:'99vh'}}>
                         {tables.map((table) => (
-                                <div className={'col-md-3 p-1'} key={table._id}>
+                                <div className={'col-md-3 p-1'}key={table._id}>
                                     <button className={'btn text-light w-100 h-100 p-3 rounded'}
                                             style={{backgroundColor: "#2d2d2d"}}
                                             onClick={() => handleShow(table)}>
