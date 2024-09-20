@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {BASE_URL} from "../App.tsx";
 import {Ingredient} from "./Inventory.tsx";
 import UpdateDishModal from "../components/UpdateDishModal.tsx";
@@ -17,9 +17,18 @@ export interface Dish {
 
 const Dishes = () => {
     const [dishes, setDishes] = useState<Dish[]>([]);
-    const [newDish, setNewDish] = useState({
+    const [newDish, setNewDish] = useState<{
+        name: string,
+        price: number,
+        category: string,
+        ingredients: {
+            ingredient: Ingredient,
+            quantityRequired: number,
+            _id: string
+        }[]
+    }>({
         name: '',
-        price: '',
+        price: 0,
         category: '',
         ingredients: []
     });
@@ -27,7 +36,7 @@ const Dishes = () => {
     const [ingredientId, setIngredientId] = useState("");
     const [requiredQuantity, setRequiredQuantity] = useState(1);
 
-    const [targetDish, setTargetDish] = useState<Dish>(null);
+    const [targetDish, setTargetDish] = useState<Dish | null>(null);
     const [showModal, setShowModal] = useState(false);
 
     const [category, setCategory] = useState("");
@@ -36,7 +45,7 @@ const Dishes = () => {
         setTargetDish(null);
         setShowModal(false);
     }
-    const handleShow = (dish) => {
+    const handleShow = (dish: Dish) => {
         setTargetDish(dish);
         setShowModal(true);
     }
@@ -53,7 +62,7 @@ const Dishes = () => {
                 } else {
                     console.log(data);
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.stack)
             }
         }
@@ -68,7 +77,7 @@ const Dishes = () => {
                 } else {
                     console.log(data)
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.stack)
             }
         }
@@ -76,7 +85,7 @@ const Dishes = () => {
         fetchIngredients();
     }, []);
 
-    const handleDishCreation = (e) => {
+    const handleDishCreation = (e: ChangeEvent<HTMLInputElement>) => {
         setNewDish({...newDish, [e.target.name]: e.target.value})
     }
 
@@ -117,20 +126,20 @@ const Dishes = () => {
             if (response.ok) {
                 alert("Success creating new dish");
                 setDishes([...dishes, data]);
-                setNewDish({name: '', price: '', category: '', ingredients: []})
+                setNewDish({name: '', price: 0, category: '', ingredients: []})
                 setIngredientId("");
                 setCategory("");
             } else {
                 console.log(`Something went wrong: ${data}`)
             }
-        } catch (e) {
+        } catch (e: any) {
             console.log(e.stack)
         }
     }
 
     const updateDish = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/dishes/${targetDish._id}`,
+            const response = await fetch(`${BASE_URL}/dishes/${targetDish?._id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -146,27 +155,28 @@ const Dishes = () => {
             } else {
                 console.log(data);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.stack);
         }
     }
 
     const deleteDish = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/dishes/${targetDish._id}`, {method: "DELETE",})
+            const response = await fetch(`${BASE_URL}/dishes/${targetDish?._id}`, {method: "DELETE",})
 
             const data = await response.json()
 
             if (response.ok) {
                 alert("Dish deleted successfully");
-                setDishes(dishes.filter((dish) => dish._id !== targetDish._id));
+                setDishes(dishes.filter((dish) => dish._id !== targetDish?._id));
             } else console.log(data);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.stack)
         }
     }
 
-    const handleUpdate = (e) => {
+    const handleUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!targetDish) return;
         setTargetDish({...targetDish, [e.target.name]: e.target.value});
     }
 
@@ -178,7 +188,12 @@ const Dishes = () => {
     return (
         <>
             {showModal && (
-                <UpdateDishModal {...targetDish}
+                <UpdateDishModal name={targetDish?.name as string}
+                                 price={targetDish?.price as number}
+                                 ingredients={targetDish?.ingredients as {
+                                     ingredient: { name: string },
+                                     quantityRequired: number
+                                 }[]}
                                  onClose={handleClose}
                                  onDelete={deleteDish}
                                  onUpdate={updateDish}
@@ -189,7 +204,7 @@ const Dishes = () => {
             {showModal && <div className="modal-backdrop fade show"></div>}
             <div className='row'>
                 <div className='col-8 d-flex flex-column'>
-                    <div className='row d-flex overflow-auto' style={{maxHeight:'99vh'}}>
+                    <div className='row d-flex overflow-auto' style={{maxHeight: '99vh'}}>
                         {dishes.map((dish) => (
                             <div className='col-md-3 p-1' key={dish._id}>
                                 <button className='btn text-light w-100 h-100 p-3 rounded'

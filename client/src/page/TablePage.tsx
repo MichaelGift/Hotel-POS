@@ -15,7 +15,7 @@ export interface Table {
     }[]
 }
 
-const Table = () => {
+const TablePage = () => {
     const [tables, setTables] = useState<Table[]>([]);
     const [targetTable, setTargetTable] = useState<Table>(null);
     const [newTable, setNewTable] = useState({
@@ -229,4 +229,4 @@ const Table = () => {
 
 }
 
-export default Table
+export default TablePage

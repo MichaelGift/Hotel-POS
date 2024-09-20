@@ -1,6 +1,14 @@
-const UpdateIngredientModal = ({name, price, quantity, onClose, onDelete, onUpdate, handleUpdate}) => (
+const UpdateIngredientModal = ({name, price, quantity, onClose, onDelete, onUpdate, handleUpdate}: {
+    name: string,
+    price: number,
+    quantity: number,
+    onClose: () => void,
+    onDelete: () => void,
+    onUpdate: () => void,
+    handleUpdate: (event: any) => void
+}) => (
     <>
-        <div className="modal fade show" style={{display: "block"}} tabIndex="-1" role="dialog">
+        <div className="modal fade show" style={{display: "block"}} tabIndex={-1} role="dialog">
             <div className="model fade show modal-dialog modal-dialog-centered rounded" role="document">
                 <div className="modal-content" style={{backgroundColor: '#2d2d2d', borderRadius: '4%'}}>
                     <div className="modal-header border-0">
@@ -20,12 +28,14 @@ const UpdateIngredientModal = ({name, price, quantity, onClose, onDelete, onUpda
                             </div>
                             <div className='mb-3'>
                                 <label className='form-label'>Price</label>
-                                <input name='price' type='number' placeholder={price} value={price} onChange={handleUpdate}
+                                <input name='price' type='number' placeholder={`${price}`} value={price}
+                                       onChange={handleUpdate}
                                        className='form-control'/>
                             </div>
                             <div className='mb-3'>
                                 <label className='form-label'>Quantity</label>
-                                <input name='quantity' type='number' placeholder={quantity} value={quantity} onChange={handleUpdate}
+                                <input name='quantity' type='number' placeholder={`${quantity}`} value={quantity}
+                                       onChange={handleUpdate}
                                        className='form-control'/>
                             </div>
                         </form>

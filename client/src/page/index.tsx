@@ -1,5 +1,5 @@
 import Order from "./Order.tsx";
-import Table from "./Table.tsx";
+import TablePage from "./TablePage.tsx";
 import PoS from "./POS.tsx"
 import Menu from "./Menu.tsx"
 import Inventory from "./Inventory.tsx";
@@ -7,7 +7,7 @@ import Dishes from "./dishes.tsx";
 
 export {
     Order,
-    Table,
+    TablePage,
     PoS,
     Menu,
     Inventory,

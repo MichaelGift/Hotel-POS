@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 
 import {BASE_URL} from "../App.tsx";
-import Table from "./Table.tsx";
+import {Table} from "./TablePage.tsx";
 import {Dish} from "./dishes.tsx";
 
 export interface Order {

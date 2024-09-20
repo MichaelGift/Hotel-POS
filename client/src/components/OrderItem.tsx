@@ -1,4 +1,11 @@
-const OrderItem = ({item, onClick, handleUpdate}) => (
+import {Dish} from "../page/dishes.tsx";
+import {MouseEventHandler} from "react";
+
+const OrderItem = ({item, onClick, handleUpdate}: {
+    item: { dish: Dish, quantityRequired: number },
+    onClick: MouseEventHandler<HTMLButtonElement>,
+    handleUpdate: (event: any) => void
+}) => (
     <div
         className="col-12 p-1">
         <div className="input-group">

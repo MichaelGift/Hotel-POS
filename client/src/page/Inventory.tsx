@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {IngredientCard} from "../components";
 import UpdateIngredientModal from "../components/UpdateIngredientModal.tsx";
 import {BASE_URL} from "../App.tsx";
@@ -10,7 +10,7 @@ const Inventory = () => {
         price: 0,
         quantity: 0,
     });
-    const [targetIngredient, setTargetIngredient] = useState<Ingredient>(null)
+    const [targetIngredient, setTargetIngredient] = useState<Ingredient | null>(null)
 
     const [showModal, setShowModal] = useState(false);
 
@@ -18,7 +18,7 @@ const Inventory = () => {
         setTargetIngredient(null)
         setShowModal(false);
     }
-    const handleShow = (ingredient) => {
+    const handleShow = (ingredient: Ingredient) => {
         setTargetIngredient(ingredient)
         setShowModal(true);
     }
@@ -35,14 +35,14 @@ const Inventory = () => {
                 } else {
                     console.log(data);
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.stack);
             }
         }
         fetchIngredients()
     }, []);
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNewIngredient({
             ...newIngredient, [e.target.name]: e.target.value
         })
@@ -67,12 +67,13 @@ const Inventory = () => {
             } else {
                 console.log(data);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.stack);
         }
     }
 
-    const handleUpdate = (e) => {
+    const handleUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!targetIngredient) return;
         setTargetIngredient({
             ...targetIngredient, [e.target.name]: e.target.value
         })
@@ -80,7 +81,7 @@ const Inventory = () => {
 
     const updateIngredient = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/ingredients/${targetIngredient._id}`, {
+            const response = await fetch(`${BASE_URL}/ingredients/${targetIngredient?._id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -93,17 +94,17 @@ const Inventory = () => {
             if (response.ok) {
                 alert("Ingredient updated successfully");
                 handleClose();
-                setIngredient(ingredients.map((ingr) => ingr._id === targetIngredient._id ? targetIngredient : ingr));
+                setIngredient(ingredients.map((ingr) => ingr._id === targetIngredient?._id ? targetIngredient : ingr));
             } else {
                 console.log(data)
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.stack)
         }
     }
     const deleteIngredient = async () => {
         try {
-            const response = await fetch(`${BASE_URL}/ingredients/${targetIngredient._id}`, {
+            const response = await fetch(`${BASE_URL}/ingredients/${targetIngredient?._id}`, {
                 method: "DELETE",
                 headers: {"Content-Type": "application/json"},
             });
@@ -113,19 +114,23 @@ const Inventory = () => {
             if (response.ok) {
                 alert("Ingredient deleted successfully");
                 handleClose();
-                setIngredient(ingredients.filter((ingr) => ingr._id !== targetIngredient._id));
+                setIngredient(ingredients.filter((ingr) => ingr._id !== targetIngredient?._id));
             } else {
                 console.log(data);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error.stack);
         }
     }
     return (
         <>
             {showModal && (
-                <UpdateIngredientModal {...targetIngredient} onClose={handleClose} handleUpdate={handleUpdate}
-                                       onUpdate={updateIngredient} onDelete={deleteIngredient}/>
+                <UpdateIngredientModal
+                    name={targetIngredient?.name || ""}
+                    price={targetIngredient?.price || 0}
+                    quantity={targetIngredient?.quantity || 0}
+                    onClose={handleClose} handleUpdate={handleUpdate}
+                    onUpdate={updateIngredient} onDelete={deleteIngredient}/>
             )}
 
             {/* Overlay when modal is active */}

@@ -1,6 +1,14 @@
-const UpdateDishModal = ({name, price, ingredients, onClose, onDelete, onUpdate, handleUpdate}) => (
+const UpdateDishModal = ({name, price, ingredients, onClose, onDelete, onUpdate, handleUpdate}: {
+    name: string,
+    price: number,
+    ingredients: { ingredient: { name: string }, quantityRequired: number }[],
+    onClose: () => void,
+    onDelete: () => void,
+    onUpdate: () => void,
+    handleUpdate: (event: any) => void
+}) => (
     <>
-        <div className={`modal fade show`} style={{display: "block"}} tabIndex="-1" role="dialog">
+        <div className={`modal fade show`} style={{display: "block"}} tabIndex={-1} role="dialog">
             <div className={`modal-dialog fade show modal-dialog modal-dialog-centered rounded`} role="document">
                 <div className={`modal-content`} style={{backgroundColor: '#2d2d2d', borderRadius: '4%'}}>
                     <div className={`modal-header border-0`}>
@@ -21,7 +29,7 @@ const UpdateDishModal = ({name, price, ingredients, onClose, onDelete, onUpdate,
 
                             <div className={`mb-3`}>
                                 <label className={`form-label`}>Price</label>
-                                <input name={`price`} type={`number`} placeholder={price} value={price}
+                                <input name={`price`} type={`number`} placeholder={`${price}`} value={price}
                                        onChange={handleUpdate}
                                        className={`form-control`}/>
                             </div>

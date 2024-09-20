@@ -1,4 +1,7 @@
-const MenuDish = ({dish, onClick}) => (
+import {Dish} from "../page/dishes.tsx";
+import {MouseEventHandler} from "react";
+
+const MenuDish = ({dish, onClick}: {dish: Dish, onClick: MouseEventHandler<HTMLButtonElement>}) => (
     <div className="col-md-3 p-1">
         <button
             className="btn text-light w-100 h-100 p-3 rounded"

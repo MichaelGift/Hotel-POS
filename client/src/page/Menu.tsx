@@ -1,12 +1,13 @@
 import {useEffect, useState} from "react";
 import {MenuDish, OrderItem} from "../components";
 import {BASE_URL} from "../App.tsx";
-import Table from "./Table.tsx";
 import {Dish} from "./dishes.tsx";
+import {Table} from "./TablePage.tsx";
 
 const Menu = () => {
     const [menu, setMenu] = useState<Dish[]>([])
     const [newOrder, setNewOrder] = useState({
+        table: "",
         bill: 0,
         orderComplete: false,
         dishes: []
@@ -18,12 +19,12 @@ const Menu = () => {
     const [selectedCategory, setSelectedCategory] = useState("Breakfast");
     const filteredMenu = menu.filter(dish => dish.category === selectedCategory);
 
-    const handleCategoryChange = (category) => {
+    const handleCategoryChange = (category: string) => {
         setSelectedCategory(category)
     }
 
     const calculateTotalPrice = () => {
-        const total = newOrder.dishes.reduce((sum, item) => {
+        const total = newOrder.dishes.reduce((sum: number, item: { dish: Dish, quantityRequired: number }) => {
             return sum + item.dish.price * item.quantityRequired
         }, 0);
         setTotalPrice(total)
@@ -48,7 +49,7 @@ const Menu = () => {
                 } else {
                     console.log(data)
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.stack)
             }
         }
@@ -63,7 +64,7 @@ const Menu = () => {
                 } else {
                     console.log(data);
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.log(error.stack);
             }
         }
@@ -72,9 +73,12 @@ const Menu = () => {
         fetchTables();
     }, [])
 
-    const addDishToOrder = (dish) => {
+    const addDishToOrder = (dish: Dish) => {
         setNewOrder((prevOrder) => {
-            const dishExists = prevOrder.dishes.find(item => item.dish._id === dish._id);
+            const dishExists: {
+                dish: Dish,
+                quantityRequired: number
+            } = prevOrder.dishes.find(item => item.dish._id === dish._id);
 
             if (dishExists) {
                 return {
@@ -117,7 +121,7 @@ const Menu = () => {
 
             if (response.ok) {
                 alert("Order placed successfully");
-                setNewOrder({bill: 0, orderComplete: false, dishes: []});
+                setNewOrder({table: '',bill: 0, orderComplete: false, dishes: []});
                 setTableId("");
             } else {
                 alert("Something went wrong");

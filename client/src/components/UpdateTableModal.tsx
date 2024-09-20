@@ -1,6 +1,14 @@
-const UpdateTableModal = ({name, seats, onClose, onDelete, onUpdate, handleUpdate, removeSeatFromTable}) => (
+const UpdateTableModal = ({name, seats, onClose, onDelete, onUpdate, handleUpdate, removeSeatFromTable} : {
+    name: string,
+    seats: { seat_number: number }[],
+    onClose: () => void,
+    onDelete: () => void,
+    onUpdate: () => void,
+    handleUpdate: (event: any) => void,
+    removeSeatFromTable: (seat_number: number) => void
+}) => (
     <>
-        <div className={`modal fade show`} style={{display: "block"}} tabIndex="-1" role="dialog">
+        <div className={`modal fade show`} style={{display: "block"}} tabIndex={-1} role="dialog">
             <div className={`modal-dialog fade show modal-dialog modal-dialog-centered rounded`} role="document">
                 <div className={`modal-content`} style={{backgroundColor: '#2d2d2d', borderRadius: '4%'}}>
                     <div className={`modal-header border-0`}>
