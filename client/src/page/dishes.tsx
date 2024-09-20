@@ -115,8 +115,11 @@ const Dishes = () => {
             const data = await response.json();
 
             if (response.ok) {
-                console.log("Success");
-                // setDishes({...dishes, newDish})
+                alert("Success creating new dish");
+                setDishes([...dishes, data]);
+                setNewDish({name: '', price: '', category: '', ingredients: []})
+                setIngredientId("");
+                setCategory("");
             } else {
                 console.log(`Something went wrong: ${data}`)
             }
@@ -154,8 +157,10 @@ const Dishes = () => {
 
             const data = await response.json()
 
-            if (response.ok) console.log("Success deleting");
-            else console.log(data);
+            if (response.ok) {
+                alert("Dish deleted successfully");
+                setDishes(dishes.filter((dish) => dish._id !== targetDish._id));
+            } else console.log(data);
         } catch (error) {
             console.log(error.stack)
         }
@@ -184,7 +189,7 @@ const Dishes = () => {
             {showModal && <div className="modal-backdrop fade show"></div>}
             <div className='row'>
                 <div className='col-8 d-flex flex-column'>
-                    <div className='row d-flex'>
+                    <div className='row d-flex overflow-auto' style={{maxHeight:'99vh'}}>
                         {dishes.map((dish) => (
                             <div className='col-md-3 p-1' key={dish._id}>
                                 <button className='btn text-light w-100 h-100 p-3 rounded'
@@ -234,6 +239,7 @@ const Dishes = () => {
                             <label className={'form-label'}>Ingredients</label>
                             <select className={'form-select form-control'} value={ingredientId}
                                     onChange={(e) => setIngredientId(e.target.value)}>
+                                <option value={''}>Select Ingredient</option>
                                 {availableIngredients.map((ingr) => (
                                     <option key={ingr._id} value={ingr._id}>{ingr.name}</option>
                                 ))}
