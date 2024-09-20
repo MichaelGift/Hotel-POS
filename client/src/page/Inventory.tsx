@@ -91,7 +91,9 @@ const Inventory = () => {
             const data = await response.json();
 
             if (response.ok) {
-                console.log('Success')
+                alert("Ingredient updated successfully");
+                handleClose();
+                setIngredient(ingredients.map((ingr) => ingr._id === targetIngredient._id ? targetIngredient : ingr));
             } else {
                 console.log(data)
             }
@@ -109,7 +111,9 @@ const Inventory = () => {
             const data = await response.json();
 
             if (response.ok) {
-                console.log('Success');
+                alert("Ingredient deleted successfully");
+                handleClose();
+                setIngredient(ingredients.filter((ingr) => ingr._id !== targetIngredient._id));
             } else {
                 console.log(data);
             }
@@ -159,7 +163,8 @@ const Inventory = () => {
                                    value={newIngredient.quantity} onChange={handleChange}/>
                         </div>
 
-                        <button className="btn btn-success rounded w-100" onClick={createNewIngredient} type="button">Add to
+                        <button className="btn btn-success rounded w-100" onClick={createNewIngredient}
+                                type="button">Add to
                             Inventory
                         </button>
                     </form>
