@@ -1,18 +1,14 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Dishes, DishesV2, Home, Menu, Order, PoS, Table, Reservation, Inventory} from './page';
+import {DishesV2, Home, Menu, Order, PoS, Table, Inventory} from './page';
 
 const App = () => (
     <BrowserRouter>
         <Routes>
             <Route path='/' element={<Home/>}/>
-            <Route path='/dishes' element={<Dishes/>}/>
-            <Route path='/orders' element={<Order/>}/>
-            <Route path='/tables' element={<Table/>}/>
             <Route path='/pos' element={<PoS/>}>
                 <Route index element={<Menu/>}/>
                 <Route path='order' element={<Order/>}/>
                 <Route path='menu' element={<Menu/>}/>
-                <Route path='reservations' element={<Reservation/>}/>
                 <Route path='tables' element={<Table/>}/>
                 <Route path='inventory' element={<Inventory/>}/>
                 <Route path='dishes' element={<DishesV2/>}/>

@@ -2,7 +2,7 @@ const formatNumberWithCommas = (number) => {
     return new Intl.NumberFormat().format(number);
 };
 
-const IngredientCard = ({name, price, quantity, onClick}) => (
+const IngredientCard = ({name, quantity, onClick}) => (
     <div className="col-md-3 p-1">
         <button className="btn text-light w-100 h-100 p-3 rounded"
                 style={{backgroundColor: '#2d2d2d'}}
