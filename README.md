@@ -1,10 +1,14 @@
 # 🍲 Serine POS
 
 ### Table of Contents
+- [Demo Video](#demo-video)
 - [Description](#description)
 - [Tech Stack](#tech-stack)
 - [Folder Structure](#folder-structure)
 - [Installation](#installation)
+
+### Demo Video
+[![Serine POS Demo](https://img.youtube.com/vi/zU1e1jDeD38/0.jpg)](https://youtu.be/zU1e1jDeD38)
 
 ### Description
 This is a Point of Sale (POS) system for a restaurant called Serine. It is a web application that allows users to
